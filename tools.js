@@ -6,7 +6,7 @@
     catch{status.textContent=tr('Could not copy. Select the result and copy it manually.','تعذّر النسخ. حدّد النتيجة وانسخها يدوياً.');}
   }
   if(tool==='focus'){
-    let mode='focus',state={remaining:25*60000,running:false,started:0},complete=false;
+    let mode='focus',state={remaining:25*60000,running:false,started:0},complete=false,configuredMinutes=25;
     const duration=el('duration'),display=el('timer-display'),status=el('timer-status'),button=el('timer-start');
     function render(){
       const left=model.remaining(state,performance.now());
@@ -20,14 +20,15 @@
     function reset(){
       const minutes=Number(duration.value);
       if(!Number.isInteger(minutes)||minutes<1||minutes>120){status.textContent=tr('Choose a whole number from 1 to 120 minutes.','اختر عدداً صحيحاً من 1 إلى 120 دقيقة.');duration.focus();return false;}
-      state={remaining:minutes*60000,running:false,started:0};complete=false;status.textContent='';render();return true;
+      configuredMinutes=minutes;state={remaining:minutes*60000,running:false,started:0};complete=false;status.textContent='';render();return true;
     }
     button.addEventListener('click',()=>{
       if(state.running){state={remaining:model.remaining(state,performance.now()),running:false,started:0};status.textContent=tr('Paused. Resume when ready.','توقف مؤقتاً. تابع عندما تكون جاهزاً.');}
-      else{if(complete&&!reset())return;if(!duration.checkValidity()){reset();return;}state={...state,running:true,started:performance.now()};status.textContent=tr('Timer started. Keep this tab open.','بدأ المؤقّت. أبقِ هذا التبويب مفتوحاً.');}
+      else{if((complete||Number(duration.value)!==configuredMinutes)&&!reset())return;if(!duration.checkValidity()){reset();return;}state={...state,running:true,started:performance.now()};status.textContent=tr('Timer started. Keep this tab open.','بدأ المؤقّت. أبقِ هذا التبويب مفتوحاً.');}
       render();
     });
     el('timer-reset').addEventListener('click',reset);duration.addEventListener('change',reset);
+    duration.addEventListener('input',()=>{if(!state.running&&duration.checkValidity())reset();});
     document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{
       mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(n=>n.setAttribute('aria-pressed',String(n===b)));duration.value=mode==='focus'?25:5;reset();
     }));
@@ -40,7 +41,11 @@
     function format(compact){
       clearResult();
       try{output.value=model.formatJSON(input.value,compact);el('json-copy').disabled=el('json-download').disabled=false;status.dataset.tone='success';status.textContent=tr('Valid JSON. Result ready.','JSON صحيح. النتيجة جاهزة.');}
-      catch(e){status.dataset.tone='error';status.textContent=e.message==='size'?tr('Input exceeds 1 MiB. Use a smaller sample.','المدخلات تتجاوز 1 MiB. استخدم عينة أصغر.'):e.message==='empty'?tr('Paste JSON or load the example first.','ألصق JSON أو حمّل المثال أولاً.'):tr('Invalid JSON. Check quotes, commas and brackets. ','JSON غير صحيح. راجع علامات الاقتباس والفواصل والأقواس. ')+(e instanceof SyntaxError?e.message.slice(0,240):'');}
+      catch(e){
+        status.dataset.tone='error';status.textContent=e.message==='size'?tr('Input exceeds 1 MiB. Use a smaller sample.','المدخلات تتجاوز 1 MiB. استخدم عينة أصغر.'):e.message==='empty'?tr('Paste JSON or load the example first.','ألصق JSON أو حمّل المثال أولاً.'):tr('Invalid JSON. Check quotes, commas and brackets.','JSON غير صحيح. راجع علامات الاقتباس والفواصل والأقواس.');
+        const location=e.message.match(/line (\d+) column (\d+)/);
+        if(location)status.textContent+=tr(` Near line ${location[1]}, column ${location[2]}.`,` قرب السطر ${location[1]}، العمود ${location[2]}.`);
+      }
     }
     input.addEventListener('input',clearResult);
     el('json-format').addEventListener('click',()=>format(false));el('json-compact').addEventListener('click',()=>format(true));
