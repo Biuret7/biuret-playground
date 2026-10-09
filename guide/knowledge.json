@@ -133,8 +133,8 @@
       "ar": "استكشف Biuret Playground"
     },
     "body": {
-      "en": "Playground brings together four working browser tools: StudyFlow planning, Focus Room, JSON Studio and File Fingerprint. Open the collection and choose a tool; no account is required.",
-      "ar": "تجمع Playground أربع أدوات تعمل في المتصفح: تخطيط StudyFlow ومساحة التركيز واستوديو JSON وبصمة الملفات. افتح المجموعة واختر أداة؛ لا تحتاج حساباً."
+      "en": "Playground includes five browser tools: StudyFlow, Focus Room, JSON Studio, File Fingerprint and Text Studio. My Work brings saved plans and favorites together. No account is required; device saving is optional.",
+      "ar": "تضم Playground خمس أدوات للمتصفح: StudyFlow ومساحة التركيز واستوديو JSON وبصمة الملفات واستوديو النصوص. تجمع أعمالي خططك ومفضلتك. لا تحتاج حساباً؛ الحفظ على الجهاز اختياري."
     },
     "keywords": [
       "playground",
@@ -379,8 +379,8 @@
       "ar": "جرّب StudyFlow"
     },
     "body": {
-      "en": "StudyFlow is a Python learning planner with a bilingual PyQt6 desktop interface and English-only CLI. The browser preview uses a portable edition of the same scheduling rules. It does not launch the desktop app or an AI model. Desktop executable downloads are not offered here yet.",
-      "ar": "StudyFlow منظّم تعلم ببايثون، بواجهة PyQt6 عربية وإنجليزية وCLI بالإنجليزية فقط. تستخدم المعاينة نسخة للمتصفح من قواعد الجدولة نفسها؛ لا تشغّل التطبيق المكتبي أو نموذجاً ذكياً. تنزيل ملفات البرنامج التنفيذي غير متاح هنا بعد."
+      "en": "StudyFlow is a Python learning planner with a bilingual PyQt6 desktop interface and English-only CLI. The six browser templates follow the same rules; the browser edition adds custom goals, target-date checks and rescheduling. It does not launch the desktop app or an AI model. Desktop executable downloads are not offered yet.",
+      "ar": "StudyFlow منظّم تعلم ببايثون، بواجهة PyQt6 عربية وإنجليزية وCLI بالإنجليزية فقط. تتبع قوالب المتصفح الستة القواعد نفسها؛ وتضيف نسخة المتصفح الأهداف المخصصة وفحص الموعد وإعادة الجدولة. لا تشغّل التطبيق المكتبي أو نموذجاً ذكياً. تنزيل البرنامج التنفيذي غير متاح بعد."
     },
     "keywords": [
       "studyflow",
@@ -403,8 +403,8 @@
       "ar": "إنشاء خطة تعلم"
     },
     "body": {
-      "en": "Choose one of six introductory templates, a skill level, a 15–120 minute budget, study days and start date. The planner preserves prerequisites, splits longer work and places practice and spaced reviews before the final project. Durations are estimates, not a promise of mastery.",
-      "ar": "اختر قالباً تمهيدياً من ستة قوالب ومستوى ووقتاً يومياً بين 15 و120 دقيقة وأيام الدراسة وتاريخ البداية. يحافظ المحرّك على المتطلبات ويقسّم العمل ويوزع التطبيق والمراجعة المتباعدة قبل المشروع النهائي. المدد تقديرات وليست ضماناً للإتقان."
+      "en": "Choose a template or a custom goal with 1–8 topics in prerequisite order. Set a level, 15–120 daily minutes, study days and an optional target date. The planner checks the target without shortening work. Preview and apply a new schedule for unfinished sessions while keeping completion checks. Save optionally on this device. Durations are estimates; custom topics do not include generated lessons.",
+      "ar": "اختر قالباً أو هدفاً مخصصاً من 1 إلى 8 مواضيع بترتيب المتطلبات. حدّد المستوى ووقتاً يومياً من 15 إلى 120 دقيقة وأيام الدراسة وموعداً مستهدفاً اختيارياً. يفحص المنظّم الموعد دون اختصار العمل. عاين واعتمد جدولاً جديداً للجلسات غير المكتملة مع الحفاظ على علامات الإنجاز، واحفظه اختيارياً على الجهاز. المدد تقديرية والمواضيع المخصصة لا تتضمن دروساً مولدة."
     },
     "keywords": [
       "plan",
@@ -419,7 +419,16 @@
       "جدول",
       "وقت",
       "قالب",
-      "القوالب"
+      "القوالب",
+      "custom",
+      "goal",
+      "deadline",
+      "reschedule",
+      "target",
+      "هدف",
+      "موعد",
+      "جدولة",
+      "مخصص"
     ]
   },
   {

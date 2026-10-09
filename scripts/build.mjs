@@ -5,7 +5,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),out=p
 if(path.dirname(out)!==root||path.basename(out)!=='_site')throw Error('Unexpected staging path');
 await rm(out,{recursive:true,force:true});await mkdir(out);
 const pages=['index','studyflow','focus','json','hash','text','workspace'];
-const files=[...pages.map(p=>p+'.html'),'playground.css','release-ui.css','playground.js','catalog.js','planner.js','tool-models.js','workbench-models.js','tools.js','workspace.js','workspace-store.js','workspace.css','robots.txt','sitemap.xml','CNAME'];
+const files=[...pages.map(p=>p+'.html'),'playground.css','release-ui.css','playground.js','catalog.js','planner.js','tool-models.js','workbench-models.js','tools.js','workspace.js','studyflow.js','learning-planner.js','workspace-store.js','workspace.css','robots.txt','sitemap.xml','CNAME'];
 for(const file of files){
   const source=await readFile(path.join(root,file));
   if(file.endsWith('.html')&&/127\.0\.0\.1|localhost|data-api=|noindex/.test(source.toString()))throw Error('Preview configuration in public HTML: '+file);

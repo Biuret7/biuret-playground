@@ -38,7 +38,7 @@
   function escapeICS(value){return String(value).replace(/\\/g,'\\\\').replace(/\r\n|\r|\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'');}
   function foldICS(line){let result='',bytes=0;for(const ch of line){const n=new TextEncoder().encode(ch).length;if(bytes+n>75){result+='\r\n ';bytes=1;}result+=ch;bytes+=n;}return result;}
   function planCalendar(plan,now=new Date()){
-    const dates=[...new Set(plan.sessions.map(s=>s.date))],lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Biuret//StudyFlow//EN','CALSCALE:GREGORIAN'];
+    const dates=[...new Set(plan.sessions.map(s=>s.date))].sort(),lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Biuret//StudyFlow//EN','CALSCALE:GREGORIAN'];
     const stamp=now.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
     for(const date of dates){
       const sessions=plan.sessions.filter(s=>s.date===date),start=date.replaceAll('-','');
