@@ -1,0 +1,32 @@
+/* Shared public tools: quiet hierarchy, consistent controls, logical RTL layout. */
+.top{position:sticky;top:0;z-index:30;background:#090f12ee;backdrop-filter:blur(16px)}
+.intro{padding-block:65px;gap:55px}.intro h1{font-size:clamp(36px,4.5vw,60px)}
+.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.tool-grid .app-card{display:flex;flex-direction:column;padding:26px;min-width:0;max-width:none;transition:border-color .2s,transform .2s,box-shadow .2s}
+.tool-grid .app-card:hover,.tool-grid .app-card:focus-within{border-color:#91b86c;transform:translateY(-3px);box-shadow:0 16px 36px #0003}
+.tool-grid .app-card .app-icon{width:54px;height:54px;border-radius:14px;font-size:20px;margin-bottom:22px}
+.tool-grid .app-card h3{font-size:24px;margin:12px 0}.tool-grid .app-card p{font-size:14px;max-width:460px;margin:0;flex:1}
+.tool-grid .app-card .app-facts{margin-block:20px}
+.card-link{border-top:1px solid #405348;padding-top:16px;color:#c5f65b;font-size:13px;font-weight:700;display:block}
+.card-link:hover{text-decoration:underline;text-underline-offset:4px}
+.collection-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-block:22px}
+.mode-tabs{display:flex;gap:7px;flex-wrap:wrap}.mode-tabs button{border:1px solid #43574e;border-radius:9px;background:#13201c;color:#adc1b9;padding:9px 16px;font-size:12px;transition:background .18s,color .18s}
+.mode-tabs button:hover{background:#283b2b;color:#e0f1da}.mode-tabs button[aria-pressed=true]{background:#293e24;border-color:#95ba5d;color:#d3ff95}
+.tool-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:start;padding-bottom:65px}
+.tool-panel{border:1px solid #40554c;background:linear-gradient(140deg,#17251f,#101c1a);border-radius:20px;padding:28px;margin-bottom:48px;min-width:0;display:grid;gap:14px}
+.tool-layout .tool-panel{margin:0}.tool-panel label{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
+.tool-panel input,.tool-panel textarea{font:inherit;color:#e8f1ed;background:#0a1412;border:1px solid #4a6458;border-radius:9px;padding:12px;width:100%;min-width:0;color-scheme:dark}
+.tool-panel input[type=file]{font-size:12px;overflow:hidden}.tool-panel input::file-selector-button{background:#283d2b;color:#d7f2c8;border:0;border-radius:6px;margin-inline-end:12px;padding:9px;font:inherit;cursor:pointer}
+.tool-panel textarea{resize:vertical;font:13px/1.7 Consolas,monospace;tab-size:2;min-height:140px}
+.tool-panel input:disabled{opacity:.55}.tool-actions{display:flex;gap:10px;flex-wrap:wrap;margin-block:5px}
+.tool-panel button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.tool-help{padding-top:10px}.tool-help h2{font-size:27px}.tool-help p,.tool-help li{font-size:14px}.tool-help ol{padding-inline-start:22px;color:#b5c8bc}.tool-help li{padding:10px 4px}
+.timer-face{padding:24px 0;display:flex;flex-direction:column;text-align:center;gap:14px}
+#timer-display{font:700 clamp(62px,8vw,86px)/1 Inter,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#d7ff9f;letter-spacing:-.04em;direction:ltr}
+#timer-caption{font-size:12px;color:#a9c4ad;min-height:24px}.focus-panel .mode-tabs{justify-content:center;margin-bottom:14px}
+.editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.editor-grid>div{min-width:0}
+.feedback{min-height:26px;font-size:13px;margin:0;overflow-wrap:anywhere}.feedback[data-tone=error]{color:#ffb6aa}.feedback[data-tone=success]{color:#c8f58c}
+#hash-output{overflow-wrap:anywhere;min-height:80px;word-break:break-all}.tool-help .notice{margin-top:24px}
+.biuret-guide .bg-panel{inset-inline-start:auto;inset-inline-end:24px;inset-block-end:88px;inset-block-start:auto}
+@media(max-width:720px){.tool-grid,.tool-layout,.editor-grid{grid-template-columns:1fr}.intro{padding-block:36px;gap:30px}.tool-layout{gap:24px;padding-bottom:36px}.tool-panel{padding:20px;margin-bottom:30px}.collection-controls{align-items:start;flex-direction:column}.collection-controls p{margin:0}.mode-tabs button{padding:10px 12px}.tool-help{padding:0}.tool-actions>*{flex:1 1 auto}.tool-grid .app-card{padding:23px}.tool-grid .app-card h3{font-size:22px}.bg-launch{max-width:calc(100vw - 32px)}}
+@media(prefers-reduced-motion:reduce){.tool-grid .app-card{transition:none}.tool-grid .app-card:hover,.tool-grid .app-card:focus-within{transform:none}}

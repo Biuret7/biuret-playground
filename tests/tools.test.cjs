@@ -1,0 +1,8 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const {formatJSON,normalizeHash,remaining}=require('../tool-models.js');
+const {createPlan}=require('../planner.js');
+test('Unicode JSON formatting and compact output preserve values',()=>{const text='{"title":"تعلم","items":[1,true,null]}';assert.deepEqual(JSON.parse(formatJSON(text)),JSON.parse(text));assert.equal(formatJSON(text,true),text);});
+test('Invalid and excessive JSON cannot produce a downloadable result',()=>{for(const value of ['','{broken}','x'.repeat(1024*1024+1),'أ'.repeat(600000)])assert.throws(()=>formatJSON(value));});
+test('Expected SHA-256 accepts case and whitespace but rejects malformed digests',()=>{assert.equal(normalizeHash('  '+ 'A'.repeat(64)+'\n'),'a'.repeat(64));for(const value of ['abc','g'.repeat(64),'a'.repeat(63)])assert.throws(()=>normalizeHash(value));});
+test('Focus time remains accurate after a delayed tick and never becomes negative',()=>{assert.equal(remaining({running:true,remaining:60000,started:1000},16000),45000);assert.equal(remaining({running:true,remaining:60000,started:1000},121000),0);assert.equal(remaining({running:false,remaining:15000,started:0},999999),15000);});
+test('Invalid date, fractional time, no study day and unsupported templates are rejected',()=>{const tracks=[{id:'test',project:{en:'project'},units:[{title:{en:'topic'}}]}];const config={template:'test',locale:'en',level:'beginner',minutes:45,days:[1],start:'2026-10-09'};for(const patch of [{start:'2026-02-30'},{minutes:15.5},{days:[]},{days:[7]},{template:'unknown'},{start:'2101-01-01'}])assert.throws(()=>createPlan({...config,...patch},tracks));});

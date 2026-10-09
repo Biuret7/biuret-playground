@@ -1,0 +1,8 @@
+{
+  "name": "biuret-playground",
+  "private": true,
+  "scripts": {
+    "check": "node --check playground.js && node --check tools.js && node --check planner.js && node --check guide/widget.js && node --test tests/*.test.cjs",
+    "build": "node scripts/build.mjs"
+  }
+}
