@@ -1,6 +1,7 @@
 (() => {
   let locale='en';try{locale=localStorage.getItem('biuret-playground-language')==='ar'?'ar':'en';}catch{}
   const tr=(en,ar)=>locale==='en'?en:ar;
+  const form=document.querySelector('#plan-form');
   let filter='all';
   function language(){
     document.documentElement.lang=locale;document.documentElement.dir=locale==='ar'?'rtl':'ltr';
