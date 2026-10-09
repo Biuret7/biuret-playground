@@ -2,7 +2,13 @@
 
 Useful small tools and working application previews at **https://demos.biuret.dev**.
 
-## Available tools
+## A task-first workbench
+
+The homepage offers five real starting points: plan, focus, format JSON, compare a fingerprint and clean text. Bilingual search and category filters narrow the web collection. Every tool provides a page-specific Guide shortcut.
+
+`software.html` is a separate collection for actual Desktop and CLI interfaces. StudyFlow Desktop 1.1.0 (Python / PyQt6, Arabic and English) and CLI 1.0.0 (English only) show their true capabilities and release status. Executable downloads are not published. Browser, Desktop and CLI data formats are separate; no automatic cross-edition sync is claimed.
+
+## Available web tools
 
 - **StudyFlow**: prerequisite-aware scheduling, six templates or a custom goal with 1–8 ordered topics, spaced review, self-reported checklist and progress. An optional target date is checked against estimated completion without reducing the workload. Preview and apply rescheduling of unfinished sessions while retaining completion checks, completed-session dates, daily budget and review gaps. Changing only the target preserves progress; changes to workload settings create a new plan. Custom text stays as entered in either interface language; no lessons are generated. Export JSON, a text checklist or iCalendar all-day reminders. Calendar lines follow [RFC 5545](https://www.rfc-editor.org/rfc/rfc5545), with UTF-8 folding and escaped text. Remove obsolete calendar reminders yourself after rescheduling. Name and optionally save plans on this device and view today’s next unfinished step. Completion is never an Academy credential. Desktop and CLI previews remain accurate; executable distribution is not included. Custom goals and rescheduling extend the browser edition only.
 - **Focus Room**: focus, short and long breaks, quick duration presets, pause/resume, daily goal and completed-session log with JSON export. Only fully elapsed focus sessions count. Remains accurate after delayed background updates. Reloading clears the active task and timer. Optional device saving preserves completed sessions and the daily goal; daily and last-seven-day summaries use local calendar days.
@@ -14,7 +20,7 @@ The catalog offers bilingual search combined with category filters and a clear e
 
 Every tool supports Arabic/English and logical RTL layout. JSON, text and file inputs remain in tab memory. Language preference is local. Device saving is optional and off by default: plans, self-reported checks, completed focus sessions, favorites and daily goal can be saved in localStorage after explicit consent. Nothing is uploaded or automatically synced. No purchase, account requirement, telemetry or external model is enabled.
 
-**Biuret Guide** retrieves curated public website topics. It does not execute commands, read accounts, answer exams or claim an AI model is connected. Future provider integration is prepared separately as a server-only gateway; no secrets or backend exam material belong in this repository.
+**Biuret Guide** retrieves curated public website topics, prioritizes the current page, and gives ordered steps with direct links. Open it with Ctrl / Command K, close with Escape, and return to the invoking control. The shared guide covers Portfolio, Academy and Playground. It does not execute commands, read accounts, answer exams or claim an AI model is connected. Future provider integration is prepared separately as a server-only gateway; no secrets or backend exam material belong in this repository.
 
 ## My Work and backups
 

@@ -10,7 +10,7 @@
   function link(text,href,cls='secondary'){const a=element('a',text,cls);a.href=href;return a;}
   const bar=element('section',undefined,'storage-bar');bar.setAttribute('aria-label',tr('Device saving','الحفظ على الجهاز'));
   const label=element('div'),heading=element('strong'),description=element('p',undefined,'small muted'),actions=element('div',undefined,'tool-actions'),message=element('p',undefined,'small');message.setAttribute('role','status');label.append(heading,description);bar.append(label,actions,message);
-  document.querySelector('main').prepend(bar);
+  if(document.body.dataset.tool!=='software')document.querySelector('main').prepend(bar);
   function notify(){document.dispatchEvent(new Event('playground:workspace'));}
   function error(){message.textContent=tr('Could not save. Existing data has not been replaced. Download a backup if available, or try another browser.','تعذّر الحفظ. لم تُستبدل بياناتك السابقة. نزّل نسخة احتياطية إن أمكن أو جرّب متصفحاً آخر.');}
   function renderStorage(){
