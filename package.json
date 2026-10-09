@@ -2,7 +2,7 @@
   "name": "biuret-playground",
   "private": true,
   "scripts": {
-    "check": "node --check playground.js && node --check tools.js && node --check planner.js && node --check workbench-models.js && node --check guide/widget.js && node --test tests/*.test.cjs",
+    "check": "node --check workspace-store.js && node --check workspace.js && node --check playground.js && node --check tools.js && node --check planner.js && node --check workbench-models.js && node --check guide/widget.js && node --test tests/*.test.cjs",
     "build": "node scripts/build.mjs"
   }
 }

@@ -425,14 +425,14 @@
   {
     "id": "data",
     "site": "playground",
-    "path": "studyflow.html#planner",
+    "path": "workspace.html#backup",
     "title": {
       "en": "Your preview data",
       "ar": "بيانات المعاينة"
     },
     "body": {
-      "en": "Tools process their inputs inside your browser. No file, JSON input, task or study plan is uploaded. Download a result if you need it; closing or reloading the page clears unsaved tool input. StudyFlow exports are previews, not desktop backups. Language preference alone is stored locally.",
-      "ar": "تعالج الأدوات مدخلاتها داخل متصفحك. لا تُرفع ملفاتك أو JSON أو مهامك أو خطة التعلم. نزّل النتيجة إن احتجتها؛ الإغلاق أو تحديث الصفحة يمسح المدخلات غير المحفوظة. تصدير StudyFlow معاينة وليس نسخة احتياطية للتطبيق. تفضيل اللغة فقط يُحفظ محلياً."
+      "en": "Tools process inputs inside your browser. Device saving is optional: explicitly save named plans, completed focus sessions and favorites. My Work shows the next study step and provides workspace backup and restore. Nothing is uploaded. JSON, text and file inputs are never persisted. There is no automatic sync; browser cleanup may erase saved work. Workspace backups are separate from desktop databases and preview exports.",
+      "ar": "تعالج الأدوات مدخلاتها في متصفحك. الحفظ اختياري: احفظ الخطط المسماة وجلسات التركيز المكتملة والمفضلة. تعرض أعمالي خطوة التعلم التالية والنسخ الاحتياطي والاستعادة. لا تُرفع البيانات، ولا تُحفظ مدخلات JSON والنصوص والملفات. لا توجد مزامنة تلقائية؛ قد يحذف مسح المتصفح أعمالك. نسخ أعمال Playground مختلفة عن قاعدة التطبيق المكتبي وتصدير المعاينة."
     },
     "keywords": [
       "data",
@@ -456,8 +456,8 @@
       "ar": "ما المتاح الآن؟"
     },
     "body": {
-      "en": "Four tools are available: StudyFlow planning, Focus Room, JSON Studio and SHA-256 File Fingerprint. Each has its own page, Arabic and English, and no account requirement. The StudyFlow desktop and CLI are variants of one project; public executable downloads are not offered yet.",
-      "ar": "تتوفر أربع أدوات: تخطيط StudyFlow ومساحة التركيز واستوديو JSON وبصمة الملفات SHA-256. لكل أداة صفحة مستقلة بالعربية والإنجليزية دون حساب. Desktop وCLI نسختان من مشروع StudyFlow نفسه؛ تنزيل ملفاته التنفيذية غير متاح بعد."
+      "en": "Five tools are available: StudyFlow, Focus Room, JSON Studio, File Fingerprint and Text Studio, all in Arabic and English with no account. My Work brings saved plans and favorites together with optional device saving. Desktop executable downloads are not offered yet.",
+      "ar": "تتوفر خمس أدوات: StudyFlow ومساحة التركيز واستوديو JSON وبصمة الملفات واستوديو النصوص، بالعربية والإنجليزية ودون حساب. تجمع أعمالي الخطط والمفضلة مع حفظ اختياري على الجهاز. تنزيل التطبيق التنفيذي المكتبي غير متاح بعد."
     },
     "keywords": [
       "available",
@@ -528,8 +528,8 @@
       "ar": "استخدام مساحة التركيز"
     },
     "body": {
-      "en": "Choose one task and 1–120 minutes. Use quick presets, pause or reset, and choose a short or long break after finishing. Fully completed focus sessions count toward your daily goal and can be exported. Reloading clears the timer and log.",
-      "ar": "اختر مهمة ووقتاً من 1 إلى 120 دقيقة. استخدم المدد السريعة وأوقف مؤقتاً أو أعد الضبط، واختر استراحة قصيرة أو طويلة بعد الانتهاء. تُحسب جلسات التركيز المكتملة ضمن هدفك اليومي ويمكن تنزيل سجلّها. يمسح التحديث المؤقّت والسجل."
+      "en": "Choose one task and 1–120 minutes. Use quick presets, pause or reset, and choose a short or long break. Only completed focus sessions count. Enable device saving to keep future completed sessions and your daily goal; the log shows daily and last-seven-day summaries. The active task and timer reset on reload.",
+      "ar": "اختر مهمة ووقتاً بين 1 و120 دقيقة. استخدم المدد السريعة والإيقاف المؤقت وإعادة الضبط والاستراحات. تُحسب جلسات التركيز المكتملة فقط. فعّل الحفظ للاحتفاظ بالجلسات التالية والهدف اليومي؛ يعرض السجل ملخص اليوم وآخر سبعة أيام. إعادة التحميل تمسح المهمة والمؤقّت الجاري."
     },
     "keywords": [
       "focus",
@@ -609,6 +609,31 @@
       "كلمات",
       "كتابة",
       "قراءة"
+    ]
+  },
+  {
+    "id": "workspace",
+    "site": "playground",
+    "path": "workspace.html",
+    "title": {
+      "en": "My Work and today’s next step",
+      "ar": "أعمالي وخطوة اليوم التالية"
+    },
+    "body": {
+      "en": "Enable device saving, generate a StudyFlow plan, name and save it. Open My Work to continue your first unfinished session, view focus summaries and reach favorite tools. Progress is self-reported and does not award Academy certificates. Backups merge into existing work after validation.",
+      "ar": "فعّل الحفظ، ثم أنشئ خطة StudyFlow وسمّها واحفظها. افتح أعمالي لمتابعة أول جلسة غير مكتملة ومشاهدة ملخص التركيز وأدواتك المفضلة. التقدم ذاتي ولا يمنح شهادات الأكاديمية. تُدمج النسخ مع أعمالك بعد التحقق."
+    },
+    "keywords": [
+      "my work",
+      "today",
+      "backup",
+      "restore",
+      "favorites",
+      "أعمالي",
+      "اليوم",
+      "استعادة",
+      "نسخة احتياطية",
+      "مفضلة"
     ]
   }
 ]
