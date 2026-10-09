@@ -4,10 +4,13 @@ Useful small tools and working application previews at **https://demos.biuret.de
 
 ## Available tools
 
-- **StudyFlow**: browser edition of the Python application's prerequisite-aware scheduler. Six introductory templates, workload splitting, spaced review and JSON preview export. The bilingual PyQt6 desktop application and English CLI are shown accurately; executable distribution is not included.
-- **Focus Room**: focus and break timer, pause/resume and task label. Remains accurate when background ticks are delayed. Reloading clears it.
-- **JSON Studio**: syntax validation, formatting, compacting, copying and downloading. Input limit 1 MiB. Native JavaScript parsing has ordinary numeric precision and duplicate-key limitations, explained in the interface.
-- **File Fingerprint**: local SHA-256 for files up to 100 MiB and comparison with a trusted publisher digest. Not an antivirus tool.
+- **StudyFlow**: prerequisite-aware scheduling, six templates, spaced review, self-reported completion checklist and progress. Export JSON, a text checklist or an iCalendar file of all-day reminders. Calendar lines follow [RFC 5545](https://www.rfc-editor.org/rfc/rfc5545), with UTF-8 folding and escaped text. Completion is tab-local, never an Academy credential. Desktop and CLI previews remain accurate; executable distribution is not included.
+- **Focus Room**: focus, short and long breaks, quick duration presets, pause/resume, daily goal and completed-session log with JSON export. Only fully elapsed focus sessions count. Remains accurate after delayed background updates. Reloading clears task, timer and log.
+- **JSON Studio**: local file import, validation, indentation settings, compacting, optional recursive key sorting (array order retained), structural statistics and export. Input limit 1 MiB; sorting depth limit 200. Native parsing's precision and duplicate-key limits remain disclosed.
+- **File Fingerprint**: local SHA-256, SHA-384 or SHA-512 for files up to 100 MiB or exact UTF-8 text. Trusted-digest comparison and downloadable report (file name, size, algorithm and result; original bytes/text excluded). Not an antivirus tool.
+- **Text Studio**: Arabic/English word and character counts, reading-time estimate, whitespace cleanup, exact duplicate-line removal, case conversion, one-step undo and TXT export. Text limit 200,000 characters.
+
+The catalog offers bilingual search combined with category filters and a clear empty state. Portfolio navigation and its homepage toolkit section link directly to these applications.
 
 Every tool supports Arabic/English and logical RTL layout. Inputs remain in tab memory, not a server or persistent learner database. Only language preference is stored. No purchase, account requirement, telemetry or external model is enabled.
 

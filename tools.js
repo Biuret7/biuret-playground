@@ -1,83 +1,39 @@
 (() => {
-  const model=PlaygroundTools, tool=document.body.dataset.tool;
-  const el=id=>document.getElementById(id), tr=(en,ar)=>document.documentElement.lang==='ar'?ar:en;
-  async function copy(text,status){
-    try{await navigator.clipboard.writeText(text);status.textContent=tr('Copied.','تم النسخ.');}
-    catch{status.textContent=tr('Could not copy. Select the result and copy it manually.','تعذّر النسخ. حدّد النتيجة وانسخها يدوياً.');}
-  }
+  const tool=document.body.dataset.tool;if(!tool)return;
+  const model=PlaygroundTools,w=Workbench,el=id=>document.getElementById(id),tr=(en,ar)=>document.documentElement.lang==='ar'?ar:en;
+  function download(text,name,type='text/plain;charset=utf-8'){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  async function copy(text,status){try{await navigator.clipboard.writeText(text);status.textContent=tr('Copied.','تم النسخ.');}catch{status.textContent=tr('Select the result and copy it manually.','حدّد النتيجة وانسخها يدوياً.');}}
+  function metrics(target,entries){target.replaceChildren();for(const [name,value] of entries){const item=document.createElement('div'),n=document.createElement('strong'),label=document.createElement('span');n.textContent=new Intl.NumberFormat(document.documentElement.lang).format(value);label.textContent=name;item.append(n,label);target.append(item);}target.hidden=false;}
   if(tool==='focus'){
-    let mode='focus',state={remaining:25*60000,running:false,started:0},complete=false,configuredMinutes=25;
-    const duration=el('duration'),display=el('timer-display'),status=el('timer-status'),button=el('timer-start');
-    function render(){
-      const left=model.remaining(state,performance.now());
-      const sec=Math.ceil(left/1000);display.textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
-      if(state.running&&left===0){state={remaining:0,running:false,started:0};complete=true;status.textContent=tr('Session complete. Take a moment, then choose your next step.','انتهت الجلسة. خذ لحظة ثم اختر خطوتك القادمة.');}
-      button.textContent=state.running?tr('Pause','إيقاف مؤقت'):complete?tr('Start again','ابدأ مجدداً'):tr('Start / resume','ابدأ / تابع');
-      el('timer-caption').textContent=state.running?(mode==='focus'?tr('A little progress, one task at a time.','تقدم بسيط، مهمة واحدة في كل مرة.'):tr('Make room for a break.','امنح نفسك استراحة.')):complete?tr('Well done. Choose your next step.','أحسنت. اختر خطوتك المقبلة.'):tr('Ready when you are','ابدأ عندما تكون جاهزاً');
-      duration.disabled=state.running;
-      document.querySelectorAll('[data-mode]').forEach(b=>b.disabled=state.running);
-    }
-    function reset(){
-      const minutes=Number(duration.value);
-      if(!Number.isInteger(minutes)||minutes<1||minutes>120){status.textContent=tr('Choose a whole number from 1 to 120 minutes.','اختر عدداً صحيحاً من 1 إلى 120 دقيقة.');duration.focus();return false;}
-      configuredMinutes=minutes;state={remaining:minutes*60000,running:false,started:0};complete=false;status.textContent='';render();return true;
-    }
-    button.addEventListener('click',()=>{
-      if(state.running){state={remaining:model.remaining(state,performance.now()),running:false,started:0};status.textContent=tr('Paused. Resume when ready.','توقف مؤقتاً. تابع عندما تكون جاهزاً.');}
-      else{if((complete||Number(duration.value)!==configuredMinutes)&&!reset())return;if(!duration.checkValidity()){reset();return;}state={...state,running:true,started:performance.now()};status.textContent=tr('Timer started. Keep this tab open.','بدأ المؤقّت. أبقِ هذا التبويب مفتوحاً.');}
-      render();
-    });
-    el('timer-reset').addEventListener('click',reset);duration.addEventListener('change',reset);
-    duration.addEventListener('input',()=>{if(!state.running&&duration.checkValidity())reset();});
-    document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{
-      mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(n=>n.setAttribute('aria-pressed',String(n===b)));duration.value=mode==='focus'?25:5;reset();
-    }));
-    document.addEventListener('playground:language',()=>{status.textContent='';render();});
-    document.addEventListener('visibilitychange',render);setInterval(render,250);render();
+    let mode='focus',state={remaining:25*60000,running:false,started:0},complete=false,configuredMinutes=25,records=[];
+    const duration=el('duration'),display=el('timer-display'),status=el('timer-status'),button=el('timer-start'),goal=el('focus-goal');
+    function log(){const rows=records.filter(r=>new Date(r.at).toDateString()===new Date().toDateString()),limit=Number(goal.value);el('focus-progress').max=Number.isInteger(limit)&&limit>0&&limit<=20?limit:4;el('focus-progress').value=rows.length;const minutes=rows.reduce((n,r)=>n+r.minutes,0);el('focus-summary').textContent=tr(`${rows.length} completed today · ${minutes} focused minutes`,`${rows.length} جلسة مكتملة اليوم · ${minutes} دقيقة تركيز`);el('focus-empty').hidden=records.length>0;el('focus-export').disabled=!records.length;el('focus-log').replaceChildren();for(const row of records.slice().reverse()){const li=document.createElement('li'),strong=document.createElement('strong'),detail=document.createElement('span');strong.textContent=row.task||tr('Untitled task','مهمة دون عنوان');detail.textContent=new Intl.DateTimeFormat(document.documentElement.lang,{dateStyle:'medium',timeStyle:'short'}).format(new Date(row.at))+tr(` · ${row.minutes} min`,` · ${row.minutes} دقيقة`);li.append(strong,detail);el('focus-log').append(li);}}
+    function render(){const left=model.remaining(state,performance.now()),sec=Math.ceil(left/1000);display.textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;if(state.running&&left===0){state={remaining:0,running:false,started:0};complete=true;if(mode==='focus')records.push({task:el('task').value.trim(),minutes:configuredMinutes,at:new Date().toISOString()});log();status.textContent=tr('Session complete. Choose your next step.','انتهت الجلسة. اختر خطوتك القادمة.');}button.textContent=state.running?tr('Pause','إيقاف مؤقت'):complete?tr('Start again','ابدأ مجدداً'):tr('Start / resume','ابدأ / تابع');el('timer-caption').textContent=state.running?(mode==='focus'?tr('One task at a time.','مهمة واحدة في كل مرة.'):tr('Make room for a break.','امنح نفسك استراحة.')):complete?tr('Well done. Choose your next step.','أحسنت. اختر خطوتك المقبلة.'):tr('Ready when you are','ابدأ عندما تكون جاهزاً');duration.disabled=el('task').disabled=state.running;document.querySelectorAll('[data-mode],[data-preset]').forEach(b=>b.disabled=state.running);}
+    function reset(){const minutes=Number(duration.value);if(!Number.isInteger(minutes)||minutes<1||minutes>120){status.textContent=tr('Choose 1–120 whole minutes.','اختر عدداً صحيحاً من 1 إلى 120 دقيقة.');duration.focus();return false;}configuredMinutes=minutes;state={remaining:minutes*60000,running:false,started:0};complete=false;status.textContent='';render();return true;}
+    button.addEventListener('click',()=>{if(state.running){state={remaining:model.remaining(state,performance.now()),running:false,started:0};status.textContent=tr('Paused. Resume when ready.','توقف مؤقتاً. تابع عندما تكون جاهزاً.');}else{if((complete||Number(duration.value)!==configuredMinutes)&&!reset())return;if(!duration.checkValidity()){reset();return;}state={...state,running:true,started:performance.now()};status.textContent=tr('Timer started. Keep this tab open.','بدأ المؤقّت. أبقِ هذا التبويب مفتوحاً.');}render();});
+    el('timer-reset').addEventListener('click',reset);duration.addEventListener('change',reset);duration.addEventListener('input',()=>{if(!state.running&&duration.checkValidity())reset();});document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(n=>n.setAttribute('aria-pressed',String(n===b)));duration.value={focus:25,break:5,long:15}[mode];reset();}));document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{duration.value=b.dataset.preset;reset();}));goal.addEventListener('input',log);el('focus-export').addEventListener('click',()=>download(JSON.stringify({format:'biuret-focus-log-v1',sessions:records},null,2),'biuret-focus-sessions.json','application/json'));document.addEventListener('playground:language',()=>{status.textContent='';render();log();});document.addEventListener('visibilitychange',()=>{render();log();});setInterval(render,250);render();log();
   }
   if(tool==='json'){
-    const input=el('json-input'),output=el('json-output'),status=el('json-status');
-    function clearResult(){output.value='';el('json-copy').disabled=el('json-download').disabled=true;status.textContent='';status.dataset.tone='';}
-    function format(compact){
-      clearResult();
-      try{output.value=model.formatJSON(input.value,compact);el('json-copy').disabled=el('json-download').disabled=false;status.dataset.tone='success';status.textContent=tr('Valid JSON. Result ready.','JSON صحيح. النتيجة جاهزة.');}
-      catch(e){
-        status.dataset.tone='error';status.textContent=e.message==='size'?tr('Input exceeds 1 MiB. Use a smaller sample.','المدخلات تتجاوز 1 MiB. استخدم عينة أصغر.'):e.message==='empty'?tr('Paste JSON or load the example first.','ألصق JSON أو حمّل المثال أولاً.'):tr('Invalid JSON. Check quotes, commas and brackets.','JSON غير صحيح. راجع علامات الاقتباس والفواصل والأقواس.');
-        const location=e.message.match(/line (\d+) column (\d+)/);
-        if(location)status.textContent+=tr(` Near line ${location[1]}, column ${location[2]}.`,` قرب السطر ${location[1]}، العمود ${location[2]}.`);
-      }
-    }
-    input.addEventListener('input',clearResult);
-    el('json-format').addEventListener('click',()=>format(false));el('json-compact').addEventListener('click',()=>format(true));
-    el('json-example').addEventListener('click',()=>{input.value='{"project":"Biuret","tools":["StudyFlow","Focus Room"],"private":true}';clearResult();input.focus();});
-    el('json-clear').addEventListener('click',()=>{input.value='';clearResult();input.focus();});
-    el('json-copy').addEventListener('click',()=>copy(output.value,status));
-    el('json-download').addEventListener('click',()=>{
-      if(!output.value)return;const url=URL.createObjectURL(new Blob([output.value],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='biuret-formatted.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent=tr('JSON downloaded.','تم تنزيل JSON.');
-    });
-    document.addEventListener('playground:language',()=>{status.textContent='';});
+    const input=el('json-input'),output=el('json-output'),status=el('json-status');let importing=false,revision=0;
+    function clearResult(){revision++;output.value='';el('json-copy').disabled=el('json-download').disabled=true;el('json-stats').hidden=true;status.textContent='';status.dataset.tone='';}
+    function stats(){if(!output.value)return;const s=w.jsonStats(output.value);metrics(el('json-stats'),[[tr('Bytes','بايتات'),s.bytes],[tr('Keys','مفاتيح'),s.keys],[tr('Objects','كائنات'),s.objects],[tr('Arrays','مصفوفات'),s.arrays]]);}
+    function format(compact){clearResult();try{const indent=el('json-indent').value==='tab'?'\t':Number(el('json-indent').value);if(el('json-sort').checked)output.value=w.sortedJSON(input.value,compact,indent);else{model.formatJSON(input.value,true);output.value=JSON.stringify(JSON.parse(input.value),null,compact?0:indent);}el('json-copy').disabled=el('json-download').disabled=false;status.dataset.tone='success';status.textContent=tr('Valid JSON. Result ready.','JSON صحيح. النتيجة جاهزة.');stats();}catch(e){output.value='';el('json-copy').disabled=el('json-download').disabled=true;status.dataset.tone='error';status.textContent=e.message==='size'?tr('Input exceeds 1 MiB.','المدخلات تتجاوز 1 MiB.'):e.message==='empty'?tr('Paste JSON or load an example.','ألصق JSON أو حمّل مثالاً.'):e.message==='depth'?tr('Nesting exceeds the 200-level sorting limit.','يتجاوز التداخل حد الترتيب البالغ 200 مستوى.'):tr('Invalid JSON. Check quotes, commas and brackets.','JSON غير صحيح. راجع علامات الاقتباس والفواصل والأقواس.');const location=e.message.match(/line (\d+) column (\d+)/);if(location)status.textContent+=tr(` Near line ${location[1]}, column ${location[2]}.`,` قرب السطر ${location[1]}، العمود ${location[2]}.`);}}
+    input.addEventListener('input',clearResult);el('json-indent').addEventListener('change',clearResult);el('json-sort').addEventListener('change',clearResult);el('json-format').addEventListener('click',()=>format(false));el('json-compact').addEventListener('click',()=>format(true));el('json-example').addEventListener('click',()=>{input.value='{"project":"Biuret","tools":["StudyFlow","Focus Room"],"private":true}';clearResult();input.focus();});el('json-clear').addEventListener('click',()=>{input.value='';el('json-file').value='';clearResult();input.focus();});
+    el('json-file').addEventListener('change',async()=>{const f=el('json-file').files[0];if(!f||importing)return;clearResult();if(f.size>model.MAX_JSON){status.textContent=tr('File exceeds 1 MiB.','الملف يتجاوز 1 MiB.');return;}const started=revision;importing=true;el('json-file').disabled=true;try{const text=await f.text();if(started!==revision)return;input.value=text;format(false);}catch{status.textContent=tr('Could not read this file.','تعذّرت قراءة الملف.');}finally{importing=false;el('json-file').disabled=false;}});el('json-copy').addEventListener('click',()=>copy(output.value,status));el('json-download').addEventListener('click',()=>{if(output.value)download(output.value,'biuret-formatted.json','application/json');});document.addEventListener('playground:language',()=>{status.textContent='';stats();});
   }
   if(tool==='hash'){
-    const file=el('hash-file'),expected=el('expected-hash'),status=el('hash-status'),button=el('hash-calculate');let digest='',busy=false;
-    function clear(){digest='';el('hash-output').value='';el('hash-result').hidden=true;status.textContent='';status.dataset.tone='';}
-    function comparison(){
-      if(!digest)return;
-      if(!expected.value.trim()){status.textContent=tr('Fingerprint ready. Add an expected SHA-256 to compare.','البصمة جاهزة. أضف البصمة المتوقعة للمقارنة.');status.dataset.tone='';return;}
-      try{const match=model.normalizeHash(expected.value)===digest;status.dataset.tone=match?'success':'error';status.textContent=match?tr('Match. The file matches this expected fingerprint.','تطابق. الملف يطابق هذه البصمة المتوقعة.'):tr('No match. This file differs from the expected fingerprint.','لا يوجد تطابق. الملف يختلف عن البصمة المتوقعة.');}
-      catch{status.dataset.tone='error';status.textContent=tr('Expected SHA-256 must contain 64 hexadecimal characters (0–9, a–f).','يجب أن تتكوّن البصمة المتوقعة من 64 رمزاً ست عشرياً (0–9، a–f).');}
-    }
-    file.addEventListener('change',clear);expected.addEventListener('input',comparison);
-    el('hash-copy').addEventListener('click',()=>copy(digest,status));
-    el('hash-form').addEventListener('submit',async event=>{
-      event.preventDefault();if(busy)return;const chosen=file.files[0];clear();
-      if(!chosen)return;
-      if(chosen.size>model.MAX_FILE){status.dataset.tone='error';status.textContent=tr('This file exceeds 100 MiB. Choose a smaller file.','هذا الملف يتجاوز 100 MiB. اختر ملفاً أصغر.');return;}
-      if(!window.isSecureContext||!crypto.subtle){status.textContent=tr('Open this tool over HTTPS to calculate file fingerprints.','افتح هذه الأداة عبر HTTPS لحساب بصمات الملفات.');return;}
-      busy=true;button.disabled=file.disabled=true;status.textContent=tr('Calculating locally…','جارٍ الحساب محلياً…');
-      try{digest=[...new Uint8Array(await crypto.subtle.digest('SHA-256',await chosen.arrayBuffer()))].map(b=>b.toString(16).padStart(2,'0')).join('');el('hash-output').value=digest;el('hash-result').hidden=false;comparison();}
-      catch{status.dataset.tone='error';status.textContent=tr('Could not read this file. Choose it again and retry.','تعذّرت قراءة الملف. اختره مجدداً وحاول.');}
-      finally{busy=false;button.disabled=file.disabled=false;}
-    });
-    document.addEventListener('playground:language',comparison);
+    const file=el('hash-file'),text=el('hash-text'),expected=el('expected-hash'),algorithm=el('hash-algorithm'),status=el('hash-status'),button=el('hash-calculate');let digest='',busy=false,mode='file',source=null;
+    function clear(){digest='';source=null;el('hash-output').value='';el('hash-result').hidden=true;status.textContent='';status.dataset.tone='';}
+    const lengths={'SHA-256':64,'SHA-384':96,'SHA-512':128};
+    function compare(){if(!digest)return;const algo=algorithm.value;if(!expected.value.trim()){status.textContent=tr('Fingerprint ready. Add an expected digest to compare.','البصمة جاهزة. أضف البصمة المتوقعة للمقارنة.');status.dataset.tone='';return;}try{const match=w.expectedDigest(expected.value,algo)===digest;status.dataset.tone=match?'success':'error';status.textContent=match?tr('Match. The bytes match this expected fingerprint.','تطابق. البايتات تطابق البصمة المتوقعة.'):tr('No match. The input differs from this expected fingerprint.','لا يوجد تطابق. المدخلات تختلف عن البصمة المتوقعة.');}catch{status.dataset.tone='error';status.textContent=tr(`Enter ${lengths[algo]} hexadecimal characters for ${algo}.`,`أدخل ${lengths[algo]} رمزاً ست عشرياً لخوارزمية ${algo}.`);}}
+    function labels(){const n=lengths[algorithm.value];expected.placeholder=tr(`${n} hexadecimal characters`,`${n} رمزاً ست عشرياً`);el('hash-result-label').textContent=tr('Fingerprint · ','البصمة · ')+algorithm.value;}
+    document.querySelectorAll('[data-hash-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.hashMode;document.querySelectorAll('[data-hash-mode]').forEach(n=>n.setAttribute('aria-pressed',String(n===b)));el('hash-file-field').hidden=mode!=='file';el('hash-text-field').hidden=mode!=='text';file.required=mode==='file';text.required=mode==='text';clear();}));file.addEventListener('change',clear);text.addEventListener('input',clear);algorithm.addEventListener('change',()=>{clear();labels();});expected.addEventListener('input',compare);el('hash-copy').addEventListener('click',()=>copy(digest,status));
+    el('hash-report').addEventListener('click',()=>{if(!digest)return;let result='not-compared';if(expected.value.trim())try{result=w.expectedDigest(expected.value,algorithm.value)===digest?'match':'mismatch';}catch{result='invalid-expected-digest';}download(JSON.stringify({format:'biuret-fingerprint-v1',...source,algorithm:algorithm.value,digest,expected:expected.value.trim(),comparison:result,notice:'Byte comparison only; not a safety or malware assessment.'},null,2),'biuret-fingerprint-report.json','application/json');});
+    el('hash-form').addEventListener('submit',async event=>{event.preventDefault();if(busy)return;clear();const chosen=file.files[0];if(mode==='file'&&!chosen)return;if(mode==='file'&&chosen.size>model.MAX_FILE){status.textContent=tr('File exceeds 100 MiB.','الملف يتجاوز 100 MiB.');return;}if(!window.isSecureContext||!crypto.subtle){status.textContent=tr('Open this tool over HTTPS.','افتح الأداة عبر HTTPS.');return;}busy=true;const controls=[button,file,text,algorithm,...document.querySelectorAll('[data-hash-mode]')];controls.forEach(c=>c.disabled=true);status.textContent=tr('Calculating locally…','جارٍ الحساب محلياً…');try{const bytes=mode==='file'?await chosen.arrayBuffer():new TextEncoder().encode(text.value);digest=[...new Uint8Array(await crypto.subtle.digest(algorithm.value,bytes))].map(b=>b.toString(16).padStart(2,'0')).join('');source={source:mode,name:mode==='file'?chosen.name:null,bytes:bytes.byteLength,computedAt:new Date().toISOString()};el('hash-output').value=digest;el('hash-result').hidden=false;labels();compare();}catch{status.dataset.tone='error';status.textContent=tr('Could not calculate. Choose the input again.','تعذّر الحساب. اختر المدخلات مجدداً.');}finally{busy=false;controls.forEach(c=>c.disabled=false);}});document.addEventListener('playground:language',()=>{labels();compare();});labels();
+  }
+  if(tool==='text'){
+    const input=el('text-input'),status=el('text-status');let previous=null;
+    function render(){const s=w.textStats(input.value,document.documentElement.lang);metrics(el('text-stats'),[[tr('Words','كلمات'),s.words],[tr('Characters','محارف'),s.characters],[tr('Lines','أسطر'),s.lines],[tr('Reading min (est.)','دقائق القراءة (تقدير)'),s.minutes]]);el('text-copy').disabled=el('text-download').disabled=!input.value;el('text-undo').disabled=previous===null;}
+    input.addEventListener('input',()=>{previous=null;status.textContent='';render();});document.querySelectorAll('[data-transform]').forEach(b=>b.addEventListener('click',()=>{previous=input.value;input.value=w.cleanText(input.value,b.dataset.transform);status.textContent=tr('Text updated. Undo is available.','تم تحديث النص. يمكنك التراجع.');render();}));el('text-undo').addEventListener('click',()=>{if(previous!==null){input.value=previous;previous=null;status.textContent=tr('Previous text restored.','تمت استعادة النص السابق.');render();}});el('text-example').addEventListener('click',()=>{previous=input.value;input.value=tr('One clear idea.\n\n  More   room to create.\nOne clear idea.','فكرة واحدة واضحة.\n\n  مساحة   أكبر للإبداع.\nفكرة واحدة واضحة.');render();status.textContent='';});el('text-copy').addEventListener('click',()=>copy(input.value,status));el('text-download').addEventListener('click',()=>download(input.value,'biuret-notes.txt'));document.addEventListener('playground:language',()=>{render();status.textContent='';});render();
   }
 })();
