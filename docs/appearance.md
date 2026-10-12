@@ -13,3 +13,7 @@ QA: all three sites switched to Light; preference survived page navigation. Acad
 Owner explicitly approved publication to all three public domains. Implementation: `3a1a5aa8f75fc32abc4635daab279a77f371f12c`. [Pages run 38284747219](https://github.com/Biuret7/biuret-playground/actions/runs/38284747219) completed successfully. The production button switched Dark to Light, the Light preference survived reload, and the button switched back to Dark after verification.
 
 Proof screenshot: `C:/Users/Extreme/Desktop/Projects/tmp/biuret-playground-light-live-20261012.png`.
+
+## Light interface refinement — 2026-10-12
+
+The Light canvas stays pale while working surfaces use deeper sage and slate tones. Dark ink, charcoal header actions, darker badges/icons and clearer field boundaries improve hierarchy. Secondary actions, selected tabs and cards share restrained hover shadows and short transitions; reduced-motion preferences suppress movement. Logo tiles and certificate image mats retain their dark backgrounds. Native inputs/selects and autofill use the Light palette. CSS cache version: `20261012-light2` (JavaScript unchanged).
