@@ -7,3 +7,9 @@ The button has localized Arabic/English labels, a pressed state, keyboard suppor
 `theme-sources.json` lists the site's stylesheet cascade. Run `node scripts/build-theme.mjs` after stylesheet changes; the public site builds also regenerate the light palette. The compiler changes scoped paint properties only, preserving layout and images. `theme-controls.css` adds the control and intentional contrast overrides, including dark certificate image mats and logo tiles.
 
 QA: all three sites switched to Light; preference survived page navigation. Academy iframe switched with its parent. At 390px, the button was visible and no horizontal overflow occurred in Portfolio credentials, Academy learning and Playground JSON. Existing suites passed: Portfolio 41, Academy 163, Playground 45.
+
+## Production release — 2026-10-12
+
+Owner explicitly approved publication to all three public domains. Implementation: `3a1a5aa8f75fc32abc4635daab279a77f371f12c`. [Pages run 38284747219](https://github.com/Biuret7/biuret-playground/actions/runs/38284747219) completed successfully. The production button switched Dark to Light, the Light preference survived reload, and the button switched back to Dark after verification.
+
+Proof screenshot: `C:/Users/Extreme/Desktop/Projects/tmp/biuret-playground-light-live-20261012.png`.
