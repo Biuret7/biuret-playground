@@ -87,7 +87,7 @@ main{max-width:1240px}
 @media(hover:none){.tool-grid .app-card:hover,.top nav>:hover,.primary:hover,.secondary:hover{transform:none}}
 
 /* Keep help in the header corner, clear of workbench controls. */
-.bg-launch{inset-inline-end:18px;inset-inline-start:auto;top:20px;bottom:auto;width:44px;height:44px;min-height:44px;padding:0;font-size:0;border-radius:12px;display:grid;place-items:center}
+.bg-launch{inset-inline-end:18px;inset-inline-start:auto;top:20px;bottom:auto;width:44px;height:44px;min-height:44px;padding:0;font-size:0!important;border-radius:12px;display:grid;place-items:center}
 .bg-launch::before{content:'✦';font-size:22px;line-height:1}
 .bg-launch::after{content:attr(aria-label);position:absolute;inset-inline-end:0;top:calc(100% + 10px);width:max-content;max-width:240px;padding:9px 12px;border:1px solid #526c5d;border-radius:10px;background:#182a22;color:#e9f5e3;font:11px/1.7 Inter,Arial,sans-serif;opacity:0;visibility:hidden;pointer-events:none}
 .bg-launch:is(:hover,:focus-visible)::after{opacity:1;visibility:visible}
