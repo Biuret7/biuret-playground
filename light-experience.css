@@ -145,3 +145,4 @@ html[data-theme=light] .tool-grid .app-card .favorite-button{border-style:solid;
 html[data-theme=light] .tool-grid .app-card .favorite-button[aria-pressed=true]{color:#345829;background:#dceccf;border-color:#88a575}
 html[data-theme=light] .tool-grid .app-card .app-facts>span{background:#e4ecee;border-color:#b6c8ce;color:#405863}
 @media(hover:hover) and (pointer:fine){html[data-theme=light] .pg-console .intent-result a:hover{background:#dffaaf;color:#203b22}}
+html[data-theme=light] .bg-launch::after{background:#243f44;color:#f2f8eb;border-color:#617f75}

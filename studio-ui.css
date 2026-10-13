@@ -85,3 +85,12 @@ main{max-width:1240px}
 @media(max-width:560px){.tool-grid{grid-template-columns:1fr}.collection-toolbar{grid-template-columns:1fr}.collection-controls{display:block}.collection-controls>p{margin-top:10px}.collection-controls .mode-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.collection-controls .mode-tabs button{padding:8px 4px;font-size:10px;min-width:0}.pg-console{padding:20px}.pg-console .intent-result{min-height:0}.pg-hero h1{font-size:37px}[dir=rtl] .pg-hero h1{font-size:34px}.tool-grid .app-card{padding:20px}.pg-trust{row-gap:9px}.program-compact,.workspace-invite{padding:21px}.product-heading h1,.inspection-head h1,.software-heading h1{font-size:30px}}
 @media(prefers-reduced-motion:reduce){.pg-hero>div,.pg-console{animation:none}.tool-grid .app-card,.tool-grid .card-link::after{transition:none}.tool-grid .app-card:hover,.tool-grid .card-link:hover::after{transform:none}}
 @media(hover:none){.tool-grid .app-card:hover,.top nav>:hover,.primary:hover,.secondary:hover{transform:none}}
+
+/* Keep help in the header corner, clear of workbench controls. */
+.bg-launch{inset-inline-end:18px;inset-inline-start:auto;top:20px;bottom:auto;width:44px;height:44px;min-height:44px;padding:0;font-size:0;border-radius:12px;display:grid;place-items:center}
+.bg-launch::before{content:'✦';font-size:22px;line-height:1}
+.bg-launch::after{content:attr(aria-label);position:absolute;inset-inline-end:0;top:calc(100% + 10px);width:max-content;max-width:240px;padding:9px 12px;border:1px solid #526c5d;border-radius:10px;background:#182a22;color:#e9f5e3;font:11px/1.7 Inter,Arial,sans-serif;opacity:0;visibility:hidden;pointer-events:none}
+.bg-launch:is(:hover,:focus-visible)::after{opacity:1;visibility:visible}
+@media(min-width:850px) and (max-width:1150px){.top{padding-inline:72px}}
+@media(min-width:721px) and (max-width:849px){.top{padding-inline:20px}.top nav{padding-inline-end:52px}}
+@media(max-width:720px){.bg-launch{top:14px;inset-inline-end:14px;width:40px;height:40px;min-height:40px}.bg-launch::after{max-width:220px}}

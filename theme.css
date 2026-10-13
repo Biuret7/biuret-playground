@@ -267,6 +267,7 @@ html[data-theme="light"] .tool-grid .app-card .card-link:hover{background:hsla(1
 html[data-theme="light"] .pg-console .intent-result a:hover{background:hsla(81.8,100.0%,80.6%,1);}
 }
 html[data-theme="light"] .tool-grid .app-card:focus-within{border-color:hsla(97.7,19.5%,36.0%,1);box-shadow:0 0 0 3px rgba(20,35,25,0.082);}
+html[data-theme="light"] .bg-launch::after{border:1px solid hsla(145.4,13.7%,74.8%,1);background:hsla(153.3,4.9%,91.9%,1);color:hsla(100.0,47.4%,11.9%,1);}
 /* A single accessible control, shared by the three Biuret sites. */
 .theme-toggle { display:inline-flex!important; align-items:center; justify-content:center; gap:8px; flex:0 0 auto; height:44px; min-height:44px; padding:8px 12px; border:1px solid #36443c; border-radius:12px; background:#141c19; color:#e0ecd9; font-family:inherit; font-size:12px; font-weight:600; line-height:1.3; white-space:nowrap; cursor:pointer; transition:background-color .2s,border-color .2s,transform .2s,box-shadow .2s; }
 .theme-toggle:hover { background:#223022; border-color:#8ba953; transform:translateY(-1px); box-shadow:0 4px 16px #0002; }
@@ -442,3 +443,4 @@ html[data-theme=light] .tool-grid .app-card .favorite-button{border-style:solid;
 html[data-theme=light] .tool-grid .app-card .favorite-button[aria-pressed=true]{color:#345829;background:#dceccf;border-color:#88a575}
 html[data-theme=light] .tool-grid .app-card .app-facts>span{background:#e4ecee;border-color:#b6c8ce;color:#405863}
 @media(hover:hover) and (pointer:fine){html[data-theme=light] .pg-console .intent-result a:hover{background:#dffaaf;color:#203b22}}
+html[data-theme=light] .bg-launch::after{background:#243f44;color:#f2f8eb;border-color:#617f75}
