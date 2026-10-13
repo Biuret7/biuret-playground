@@ -122,3 +122,26 @@ html[data-theme=light] .top .brand img { background:#132116; border-radius:6px; 
   html[data-theme=light] :is(a,button):hover,html[data-theme=light] .ctf-card:hover .ctf-arrow { transform:none!important; }
 }
 html[data-theme=light] :is(button:disabled,[aria-disabled=true]):is(:hover,:active) { transform:none!important; box-shadow:none!important; }
+
+/* Studio presentation: preserve dark controls and deliberate contrast. */
+html[data-theme=light]{--studio-canvas:#f4f6f7;--studio-paper:#fff;--studio-border:#a3b6c0;--studio-copy:#405863;--studio-ink:#172a31}
+html[data-theme=light] .pg-trust span{background:transparent;border:0;color:#405863}
+html[data-theme=light] .pg-console .intent-result{background:transparent;border:0;box-shadow:none;color:#eff6ed}
+html[data-theme=light] .pg-console .intent-result :is(h3,p){color:#e4f0e6}
+html[data-theme=light] .pg-console .intent-result li{background:transparent;border:0;color:#bccfc3}
+html[data-theme=light] .pg-console .intent-result a{background:#d3ef9c;color:#203b22;border-color:#b5d07f}
+html[data-theme=light] .pg-console-head{border-color:#607d76}
+html[data-theme=light] .launch-label{color:#d0e0d6}
+html[data-theme=light] .launch-select{background:#eff5ed;color:#203b2c;border-color:#a3b996;color-scheme:light}
+html[data-theme=light] .collection-controls .mode-tabs{background:#e4ecec;border-color:#a4b9bb}
+html[data-theme=light] .collection-controls .mode-tabs button{color:#405863;background:transparent;border:0}
+html[data-theme=light] .collection-controls .mode-tabs button[aria-pressed=true]{background:#243f44;color:#f2f8eb}
+html[data-theme=light] .tool-grid .app-card[data-category=learning]{--tool-tint:#d0ee96}
+html[data-theme=light] .tool-grid .app-card[data-category=development]{--tool-tint:#b5d1ff}
+html[data-theme=light] .tool-grid .app-card[data-category=security]{--tool-tint:#a3e2d1}
+html[data-theme=light] .tool-grid .app-card .app-icon{color:var(--tool-tint)}
+html[data-theme=light] .tool-card-top>span{color:#4c6870}
+html[data-theme=light] .tool-grid .app-card .favorite-button{border-style:solid;border-color:#aec1bc;color:#506c5f;background:#edf3ee}
+html[data-theme=light] .tool-grid .app-card .favorite-button[aria-pressed=true]{color:#345829;background:#dceccf;border-color:#88a575}
+html[data-theme=light] .tool-grid .app-card .app-facts>span{background:#e4ecee;border-color:#b6c8ce;color:#405863}
+@media(hover:hover) and (pointer:fine){html[data-theme=light] .pg-console .intent-result a:hover{background:#dffaaf;color:#203b22}}
