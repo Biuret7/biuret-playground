@@ -18,7 +18,15 @@
     const target=$('today-step'),next=WorkspaceStore.nextSessions(plan,[...completed]);target.replaceChildren(node('h4',tr('What should I study today?','ماذا أدرس اليوم؟')));
     const session=next.overdue[0]||next.today[0]||next.next;
     target.append(node('p',next.complete?tr('All sessions checked. Reflect on your final result.','حدّدت جميع الجلسات كمنجزة. راجع نتيجتك النهائية.'):next.overdue.length?tr('Begin with one unfinished session, or preview a new schedule below.','ابدأ بجلسة غير مكتملة، أو اعرض جدولاً جديداً أدناه.'):next.today.length?tr('Your next unfinished step today:','خطوتك التالية غير المكتملة اليوم:'):tr('Your next scheduled session:','جلستك التالية المجدولة:')));
-    if(session){target.append(node('p',formatDate(session.date)+' · '+kind[session.kind][locale()==='en'?0:1]+' · '+session.topic+tr(` · ${session.minutes} min`,` · ${session.minutes} دقيقة`)));const link=node('a',tr('Open Focus Room ↗','افتح مساحة التركيز ↗'),'secondary');link.href='focus.html';target.append(link);}
+    if(session){
+      target.append(node('p',formatDate(session.date)+' · '+kind[session.kind][locale()==='en'?0:1]+' · '+session.topic+tr(` · ${session.minutes} min`,` · ${session.minutes} دقيقة`)));
+      const saved=PlaygroundWorkspace.read()?.plans.find(p=>p.id===activeId);
+      const canCarry=saved&&JSON.stringify(saved.config)===JSON.stringify(config)&&!saved.completed.includes(session.index);
+      const link=node('a',canCarry?tr('Focus on this session ↗','ركّز على هذه الجلسة ↗'):tr('Open Focus Room ↗','افتح مساحة التركيز ↗'),'secondary');
+      link.href=canCarry?`focus.html?plan=${encodeURIComponent(activeId)}&session=${session.index}#focus-context`:'focus.html';
+      link.target='_blank';link.rel='noopener';target.append(link);
+      target.append(node('p',canCarry?tr('Opens in a new tab with the saved task and duration. Your plan stays here.','تُفتح في تبويب جديد بالمهمة والمدة المحفوظتين. تبقى خطتك هنا.'):tr('Opens in a new tab so this preview stays here. Save this plan to carry the task and duration automatically.','تُفتح في تبويب جديد لتبقى المعاينة هنا. احفظ الخطة لنقل المهمة والمدة تلقائياً.'),'small muted'));
+    }
   }
   let savingAvailable=null;
   function savingState(){
@@ -116,7 +124,7 @@
   function syncForm(){for(const key of ['template','level','minutes','start'])$(key).value=config[key];$('deadline').value=config.deadline||'';form.querySelectorAll('[name=day]').forEach(i=>i.checked=config.days.includes(Number(i.value)));$('custom-goal').value=config.custom?.goal||'';$('custom-topics').value=config.custom?.topics.join('\n')||'';customFields();$('replan-from').value=[WorkspaceStore.localDay(),config.start].sort().at(-1);$('replan-from').min=config.start;}
   function load(saved){config=saved.config;persistedConfig=JSON.stringify(saved.config);activeId=saved.id;scheduleMeta=saved.schedule||null;completed=new Set(saved.completed);plan=LearningPlanner.restorePlan(saved,locale(),StudyFlowCatalog);$('plan-name').value=saved.name;syncForm();invalidate();render();feedback($('plan-status'),'Saved plan restored. Continue from your next unfinished session.','استُعيدت خطتك. تابع من الجلسة التالية غير المكتملة.');}
   document.addEventListener('playground:language',()=>{customFields();if(plan){plan=LearningPlanner.restorePlan({config,schedule:scheduleMeta},locale(),StudyFlowCatalog);render();savingState();}});
-  document.addEventListener('playground:workspace',savingState);
+  document.addEventListener('playground:workspace',()=>{savingState();if(plan)progress();});
   window.addEventListener('storage',e=>{if(e.key!==WorkspaceStore.KEY&&e.key!==null)return;const saved=PlaygroundWorkspace.read()?.plans.find(p=>p.id===activeId);if(saved)load(saved);else if(activeId){activeId=null;persistedConfig=null;invalidate();savingState();}});
   const restoreId=new URLSearchParams(location.search).get('plan');if(restoreId){const saved=PlaygroundWorkspace.read()?.plans.find(p=>p.id===restoreId);if(saved)load(saved);else feedback($('plan-status'),'This plan is not saved in this browser. Open My Work or restore a backup.','هذه الخطة غير محفوظة في هذا المتصفح. افتح أعمالي أو استعد نسخة احتياطية.');}
   const exportFile=PlaygroundUI.saveFile;

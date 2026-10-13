@@ -38,7 +38,11 @@
       let task=next.overdue[0]||next.today[0]||next.next;
       const note=next.complete?tr('All sessions checked. Reflect on what you built.','حدّدت جميع الجلسات كمنجزة. راجع ما بنيته.'):next.overdue.length?tr('Continue an earlier unfinished session first.','تابع جلسة سابقة غير مكتملة أولاً.'):next.today.length?tr('Your next step today','خطوتك التالية اليوم'):tr('Your next scheduled session','جلستك التالية المجدولة');card.append(element('strong',note,'next-label'));
       if(task)card.append(element('p',task.topic),element('p',task.date+tr(` · ${task.minutes} min`,` · ${task.minutes} دقيقة`),'small muted'));
-      const deadline=LearningPlanner.deadline(generated,p.completed);if(deadline.target)card.append(element('p',tr('Target: ','الموعد: ')+deadline.target+' · '+(deadline.complete?tr('All checked','كل الجلسات محددة كمنجزة'):deadline.late?tr('Adjust routine or target','عدّل الروتين أو الموعد'):tr('Routine fits target','الروتين يناسب الموعد')),'small deadline-note'));card.append(link(tr('Continue plan ↗','تابع الخطة ↗'),`studyflow.html?plan=${encodeURIComponent(p.id)}#planner`,'primary'));$('saved-plans').append(card);
+      const deadline=LearningPlanner.deadline(generated,p.completed);if(deadline.target)card.append(element('p',tr('Target: ','الموعد: ')+deadline.target+' · '+(deadline.complete?tr('All checked','كل الجلسات محددة كمنجزة'):deadline.late?tr('Adjust routine or target','عدّل الروتين أو الموعد'):tr('Routine fits target','الروتين يناسب الموعد')),'small deadline-note'));
+      const actions=element('div',undefined,'tool-actions');
+      actions.append(link(tr('Continue plan ↗','تابع الخطة ↗'),`studyflow.html?plan=${encodeURIComponent(p.id)}#planner`,'primary'));
+      if(task){const focus=link(tr('Focus on next session ↗','ركّز على الجلسة التالية ↗'),`focus.html?plan=${encodeURIComponent(p.id)}&session=${task.index}#focus-context`);focus.target='_blank';focus.rel='noopener';actions.append(focus);}
+      card.append(actions);$('saved-plans').append(card);
     }
     const names={studyflow:['StudyFlow','منظّم التعلم'],focus:['Focus Room','مساحة التركيز'],json:['JSON Studio','استوديو JSON'],hash:['File Fingerprint','بصمة الملفات'],text:['Text Studio','استوديو النصوص'],compare:['Text Compare','مقارنة النصوص'],url:['URL Inspector','فاحص الروابط']};
     $('favorite-tools').replaceChildren();$('favorites-empty').hidden=data.favorites.length>0;for(const id of data.favorites)$('favorite-tools').append(link(names[id][locale==='ar'?1:0]+' ↗',id+'.html'));

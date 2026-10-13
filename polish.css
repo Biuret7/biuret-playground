@@ -16,3 +16,15 @@
 #timer-caption{max-width:32ch;margin-inline:auto;line-height:1.6}
 @media(max-width:560px){.diff-lines>div{grid-template-columns:58px minmax(0,1fr);gap:8px;padding-inline:9px}.diff-number{font-size:9px}}
 @media(max-width:430px){.top nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.top nav>:is(a,button){min-width:0;padding:8px 5px;font-size:10px;min-height:42px}}
+
+.focus-context{margin-block:0 24px;border-inline-start:3px solid #a2ca69;background:#17251c}
+.focus-context-heading{display:flex;align-items:center;gap:14px}
+.focus-context-heading svg{color:#b5d98a;flex-shrink:0}
+.focus-context h2{font-size:22px;margin-block:6px;overflow-wrap:anywhere}
+.focus-context p{font-size:13px;line-height:1.8;overflow-wrap:anywhere}
+.focus-context .secondary{min-height:40px;font-size:12px}
+.focus-context>div[hidden],.focus-context[hidden]{display:none!important}
+#focus-workbench,.focus-context{scroll-margin-block-start:0}
+.saved-plan>.tool-actions{margin-block-start:auto;margin-block-end:0;align-items:stretch}
+.saved-plan>.tool-actions a{margin:0;align-self:stretch;display:flex;align-items:center}
+@media(max-width:560px){.focus-context{padding:18px}.focus-context h2{font-size:20px}.saved-plan>.tool-actions{display:grid;grid-template-columns:1fr;width:100%}#focus-workbench,.focus-context{scroll-margin-block-start:40px}}

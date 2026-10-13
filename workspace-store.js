@@ -46,11 +46,24 @@
     const remaining=plan.sessions.map((s,i)=>({...s,index:i})).filter(s=>!completed.includes(s.index));
     return {overdue:remaining.filter(s=>s.date<today),today:remaining.filter(s=>s.date===today),next:remaining.find(s=>s.date>today),complete:remaining.length===0};
   }
+  function focusSession(value,planId,index,planner,catalog,locale='en'){
+    if(!id(planId)||typeof index!=='string'||!/^(0|[1-9]\d{0,3})$/.test(index))throw Error('invalid-session');
+    const data=validate(value,planner,catalog),record=data.plans.find(p=>p.id===planId);
+    if(!record)throw Error('missing-plan');
+    const sessionIndex=Number(index),plan=planner.restorePlan(record,locale,catalog),session=plan.sessions[sessionIndex];
+    if(!session)throw Error('invalid-session');
+    if(record.completed.includes(sessionIndex))throw Error('completed-session');
+    const labels={learn:['Learn','تعلّم'],practice:['Practice','تطبيق'],review:['Review','مراجعة'],project:['Final project','المشروع النهائي']};
+    const label=labels[session.kind][locale==='ar'?1:0];
+    const part=session.parts>1?(locale==='ar'?` · الجزء ${session.part}/${session.parts}`:` · part ${session.part}/${session.parts}`):'';
+    const task=label+': '+session.topic+part;
+    return {planId:record.id,planName:record.name,index:sessionIndex,session,task:task.slice(0,160),minutes:session.minutes};
+  }
   function summary(sessions,now=new Date()){
     const start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-6);const day=localDay(now);
     const week=sessions.filter(s=>new Date(s.at)>=start&&new Date(s.at)<=now),today=week.filter(s=>localDay(new Date(s.at))===day);
     return {today:today.length,todayMinutes:today.reduce((n,s)=>n+s.minutes,0),week:week.length,weekMinutes:week.reduce((n,s)=>n+s.minutes,0)};
   }
   function makePlan(config,name,generated,existing){const stamp=new Date().toISOString(),record={id:existing?.id||crypto.randomUUID(),name:name.trim(),engine:config.custom||config.deadline||existing?.schedule?2:1,signature:existing?.signature||generated.sessions.map(s=>[s.kind,s.date,s.minutes,s.part,s.parts].join(':')).join('|'),config,completed:existing?.completed||[],createdAt:existing?.createdAt||stamp,updatedAt:stamp};if(existing?.schedule)record.schedule=existing.schedule;return record;}
-  return {KEY,FORMAT,VERSION,tools,empty,validate,parse,merge,connect,localDay,nextSessions,summary,makePlan};
+  return {KEY,FORMAT,VERSION,tools,empty,validate,parse,merge,connect,localDay,nextSessions,focusSession,summary,makePlan};
 });
