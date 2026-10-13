@@ -5,3 +5,14 @@
 @media(prefers-reduced-motion:no-preference){.tool-grid .app-card{transition:transform .18s,border-color .18s}.tool-grid .app-card:hover{transform:translateY(-3px);border-color:#98b96b}}
 
 .inspection-shell label:has(#only-changes){display:flex;align-items:center;gap:10px}.inspection-shell #only-changes{width:18px;height:18px;padding:0;accent-color:#bcfa4d}
+
+/* Separate line references from user content, including bidirectional text. */
+.diff-lines>div{display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px;align-items:start}
+.diff-number{direction:ltr;unicode-bidi:isolate;color:#b9cbb4;font-size:10px;white-space:nowrap;padding-top:2px}
+.diff-content{white-space:pre-wrap;overflow-wrap:anywhere;unicode-bidi:plaintext;text-align:start;min-width:0}
+.inspection-status:not(:empty){padding:10px 14px;border-inline-start:3px solid #6f9066;border-radius:8px;background:#16231c;overflow-wrap:anywhere}
+.inspection-status[data-tone=error]:not(:empty){color:#ffc6b9;background:#39221d;border-color:#df9b86}
+.inspection-status[data-tone=success]:not(:empty){color:#d6efbe;background:#203020;border-color:#a4c77f}
+#timer-caption{max-width:32ch;margin-inline:auto;line-height:1.6}
+@media(max-width:560px){.diff-lines>div{grid-template-columns:58px minmax(0,1fr);gap:8px;padding-inline:9px}.diff-number{font-size:9px}}
+@media(max-width:430px){.top nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.top nav>:is(a,button){min-width:0;padding:8px 5px;font-size:10px;min-height:42px}}

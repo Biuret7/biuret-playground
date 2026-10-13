@@ -1,7 +1,7 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.WorkspaceStore=api;})(typeof globalThis!=='undefined'?globalThis:this,()=>{
   'use strict';
   const KEY='biuret-playground-workspace-v1',FORMAT='biuret-playground-workspace',VERSION=1;
-  const tools=['studyflow','focus','json','hash','text'];
+  const tools=['studyflow','focus','json','hash','text','compare','url'];
   const fail=()=>{throw Error('invalid-backup');};
   const object=x=>x&&typeof x==='object'&&!Array.isArray(x);
   const str=(x,max)=>typeof x==='string'&&x.length<=max&&!/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(x);
@@ -9,7 +9,7 @@
   const time=x=>typeof x==='string'&&/^\d{4}-\d{2}-\d{2}T/.test(x)&&Number.isFinite(Date.parse(x))&&Date.parse(x)>=Date.UTC(2020,0,1)&&Date.parse(x)<=Date.now()+300000;
   function empty(){return {format:FORMAT,version:VERSION,plans:[],sessions:[],favorites:[],goal:4};}
   function validate(value,planner,catalog){
-    if(!object(value)||value.format!==FORMAT||value.version!==VERSION||!Array.isArray(value.plans)||value.plans.length>20||!Array.isArray(value.sessions)||value.sessions.length>1000||!Array.isArray(value.favorites)||value.favorites.length>5||!Number.isInteger(value.goal)||value.goal<1||value.goal>20)fail();
+    if(!object(value)||value.format!==FORMAT||value.version!==VERSION||!Array.isArray(value.plans)||value.plans.length>20||!Array.isArray(value.sessions)||value.sessions.length>1000||!Array.isArray(value.favorites)||value.favorites.length>tools.length||!Number.isInteger(value.goal)||value.goal<1||value.goal>20)fail();
     const plans=value.plans.map(p=>{
       if(!object(p)||!id(p.id)||!str(p.name,80)||!p.name.trim()||!time(p.createdAt)||!time(p.updatedAt)||!object(p.config)||![1,2].includes(p.engine)||!Array.isArray(p.completed))fail();
       const c=p.config;

@@ -93,6 +93,10 @@ html[data-theme=light] .diff-lines>.removed { background:#f1dcd7; border-color:#
 html[data-theme=light] .feedback:not(:empty) { border-inline-start:3px solid #7894a1; background:#dce6e9; border-radius:8px; padding:10px 14px; }
 html[data-theme=light] .feedback[data-tone=error]:not(:empty) { background:#f1dcd7; border-color:#a35043; }
 html[data-theme=light] .feedback[data-tone=success]:not(:empty) { background:#d8ebcf; border-color:#447434; }
+html[data-theme=light] .inspection-status:not(:empty) { color:#314f59; background:#dce6e9; border-color:#7894a1; }
+html[data-theme=light] .inspection-status[data-tone=error]:not(:empty) { color:#91352c; background:#f1dcd7; border-color:#a35043; }
+html[data-theme=light] .inspection-status[data-tone=success]:not(:empty) { color:#2c5729; background:#d8ebcf; border-color:#447434; }
+html[data-theme=light] .diff-number { color:#48606a; }
 @media(hover:hover) and (pointer:fine) {
   html[data-theme=light] .top nav>:is(a,button):hover { background:#2e5157; color:#fff; border-color:#779e8a; transform:translateY(-2px); box-shadow:0 5px 14px #102b3420; }
   html[data-theme=light] .intent-grid button:hover { background:#3a5c65; color:#fff; border-color:#a3c294; }

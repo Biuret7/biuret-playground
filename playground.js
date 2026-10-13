@@ -12,7 +12,7 @@
     else document.title=({focus:tr('Focus Room','مساحة التركيز'),json:tr('JSON Studio','استوديو JSON'),hash:tr('File Fingerprint','بصمة الملفات'),text:tr('Text Studio','استوديو النصوص'),compare:tr('Text Compare','مقارنة النصوص'),url:tr('URL Inspector','فاحص الروابط'),workspace:tr('My Work','أعمالي'),software:tr('Desktop & CLI programs','البرامج المكتبية وCLI')})[document.body.dataset.tool]+' — Biuret Playground';
     document.querySelectorAll('[data-placeholder-en]').forEach(n=>n.placeholder=n.dataset[locale==='en'?'placeholderEn':'placeholderAr']);
     document.querySelectorAll('[data-label-en]').forEach(n=>n.setAttribute('aria-label',n.dataset[locale==='en'?'labelEn':'labelAr']));
-    document.querySelector('[aria-label="Timer mode"]')?.setAttribute('aria-label',tr('Timer mode','نوع المؤقّت'));
+    document.querySelector('#main .mode-tabs')?.setAttribute('aria-label',document.body.dataset.tool==='hash'?tr('Input source','مصدر المدخلات'):tr('Timer mode','نوع المؤقّت'));
     document.querySelector('[data-filter]')?.parentElement.setAttribute('aria-label',tr('Filter tools','تصنيف الأدوات'));
     document.dispatchEvent(new Event('playground:language'));
     if(document.querySelector('#tool-count'))filterTools();
