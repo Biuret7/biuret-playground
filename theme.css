@@ -220,6 +220,13 @@ html[data-theme="light"] .inspection-status[data-tone=error]:not(:empty){color:h
 html[data-theme="light"] .inspection-status[data-tone=success]:not(:empty){color:hsla(90.6,60.5%,14.1%,1);background:hsla(120.0,3.6%,91.0%,1);border-color:hsla(89.2,25.0%,36.0%,1);}
 html[data-theme="light"] .focus-context{border-inline-start:3px solid hsla(84.7,25.0%,36.0%,1);background:hsla(141.4,4.2%,92.2%,1);}
 html[data-theme="light"] .focus-context-heading svg{color:hsla(87.3,51.0%,17.9%,1);}
+html[data-theme="light"] .plan-toolbar label,html[data-theme="light"] #rename-plan-form label{color:hsla(126.0,22.7%,14.5%,1);}
+html[data-theme="light"] .plan-toolbar input,html[data-theme="light"] .plan-toolbar select,html[data-theme="light"] #rename-plan-name{border:1px solid hsla(143.6,16.7%,72.8%,1);background:hsla(160.0,5.7%,93.6%,1);color:hsla(96.9,39.4%,11.7%,1);}
+html[data-theme="light"] .plan-rename{border:1px solid hsla(126.7,16.4%,72.6%,1);color:hsla(108.8,27.6%,15.9%,1);}
+html[data-theme="light"] .plan-rename:hover{background:hsla(128.2,4.0%,89.9%,1);border-color:hsla(82.1,25.0%,36.0%,1);}
+html[data-theme="light"] .plan-state{border:1px solid hsla(106.0,17.0%,73.5%,1);color:hsla(87.6,52.1%,14.9%,1);background:hsla(112.9,3.6%,90.7%,1);}
+html[data-theme="light"] .plan-state[data-complete=true]{background:hsla(147.5,4.1%,89.3%,1);border-color:hsla(139.6,23.9%,36.0%,1);color:hsla(134.1,56.7%,13.1%,1);}
+html[data-theme="light"] .planned-effort{color:hsla(129.2,17.8%,17.4%,1);}
 /* A single accessible control, shared by the three Biuret sites. */
 .theme-toggle { display:inline-flex!important; align-items:center; justify-content:center; gap:8px; flex:0 0 auto; height:44px; min-height:44px; padding:8px 12px; border:1px solid #36443c; border-radius:12px; background:#141c19; color:#e0ecd9; font-family:inherit; font-size:12px; font-weight:600; line-height:1.3; white-space:nowrap; cursor:pointer; transition:background-color .2s,border-color .2s,transform .2s,box-shadow .2s; }
 .theme-toggle:hover { background:#223022; border-color:#8ba953; transform:translateY(-1px); box-shadow:0 4px 16px #0002; }
@@ -349,6 +356,10 @@ html[data-theme=light] .inspection-status[data-tone=success]:not(:empty) { color
 html[data-theme=light] .diff-number { color:#48606a; }
 html[data-theme=light] .focus-context.tool-panel { background:#e1ecd8; border-color:#7d985f; }
 html[data-theme=light] .focus-context-heading svg { color:#3d642b; }
+html[data-theme=light] .plan-rename { color:#345b39; border-color:#91a78d; background:#eff4eb; }
+html[data-theme=light] .plan-rename:hover { background:#d5e4c8; border-color:#648550; }
+html[data-theme=light] .plan-state { background:#dce7d2; border-color:#a0b68e; color:#36562e; }
+html[data-theme=light] .plan-state[data-complete=true] { background:#cde5d4; border-color:#88ad93; color:#285c39; }
 @media(hover:hover) and (pointer:fine) {
   html[data-theme=light] .top nav>:is(a,button):hover { background:#2e5157; color:#fff; border-color:#779e8a; transform:translateY(-2px); box-shadow:0 5px 14px #102b3420; }
   html[data-theme=light] .intent-grid button:hover { background:#3a5c65; color:#fff; border-color:#a3c294; }

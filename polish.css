@@ -28,3 +28,22 @@
 .saved-plan>.tool-actions{margin-block-start:auto;margin-block-end:0;align-items:stretch}
 .saved-plan>.tool-actions a{margin:0;align-self:stretch;display:flex;align-items:center}
 @media(max-width:560px){.focus-context{padding:18px}.focus-context h2{font-size:20px}.saved-plan>.tool-actions{display:grid;grid-template-columns:1fr;width:100%}#focus-workbench,.focus-context{scroll-margin-block-start:40px}}
+
+.plan-toolbar{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);gap:14px;margin-block:18px 8px}
+.plan-toolbar label,#rename-plan-form label{display:grid;gap:8px;font-size:12px;color:#c9ddcb}
+.plan-toolbar input,.plan-toolbar select,#rename-plan-name{width:100%;min-width:0;border:1px solid #466251;border-radius:10px;padding:11px 12px;background:#0d1915;color:#edf5e8;font:inherit;font-size:13px;min-height:44px}
+.saved-plan-head{display:flex;align-items:start;justify-content:space-between;gap:14px}
+.saved-plan-head h3{margin:0;min-width:0;font-size:22px;line-height:1.5}
+.plan-rename{flex-shrink:0;display:grid;place-items:center;width:42px;min-height:42px;border:1px solid #456048;border-radius:10px;background:transparent;color:#bbd5b5;cursor:pointer}
+.plan-rename:hover{background:#263c29;border-color:#a3c26e}
+.plan-state{align-self:start;padding:5px 9px;border:1px solid #506749;border-radius:7px;font-size:10px;font-weight:650;color:#d1e8b6;background:#243322}
+.plan-state[data-complete=true]{background:#294134;border-color:#78ac89;color:#d0f2d8}
+.planned-effort{color:#a9c3ad;margin:0!important}
+.saved-grid .saved-plan{animation:none}
+#rename-plan-form{display:grid;gap:12px}
+#plan-action-status:empty{display:none}
+@media(hover:hover) and (pointer:fine){.plan-rename{transition:background .18s,border-color .18s}}
+@media(max-width:720px){.plan-toolbar{grid-template-columns:1fr 1fr}.plan-toolbar>label:first-child{grid-column:1/-1}}
+@media(max-width:430px){.saved-plan-head h3{font-size:20px}}
+@media(max-width:360px){.plan-toolbar{grid-template-columns:1fr}.plan-toolbar>label:first-child{grid-column:auto}}
+@media(prefers-reduced-motion:reduce){.plan-rename{transition:none}}

@@ -26,27 +26,71 @@
   }
   document.querySelectorAll('[data-favorite]').forEach(b=>b.addEventListener('click',()=>{try{store.update(s=>({...s,favorites:s.favorites.includes(b.dataset.favorite)?s.favorites.filter(x=>x!==b.dataset.favorite):[...s.favorites,b.dataset.favorite]}));favorites();notify();}catch{error();}}));
   let candidate=null,importRevision=0,renderBackup=()=>{};
+  let editingPlan=null;
+  function editPlan(record){
+    editingPlan={id:record.id,name:record.name};
+    $('rename-plan-name').value=record.name;feedback($('rename-plan-status'));
+    $('rename-plan-dialog').showModal();$('rename-plan-name').focus();$('rename-plan-name').select();
+  }
   function dashboard(){
     if(!$('saved-plans'))return;
-    const data=store.read()||model.empty(),locale=document.documentElement.lang;
+    const current=store.read(),unavailable=Boolean(store.issue),data=current||model.empty(),locale=document.documentElement.lang;
+    const number=value=>new Intl.NumberFormat(locale).format(value);
+    const date=value=>new Intl.DateTimeFormat(locale,{dateStyle:'medium'}).format(new Date(value+'T12:00:00'));
     const sum=model.summary(data.sessions);
     feedback($('workspace-title'),'My Work','أعمالي');document.title=tr('My Work — Biuret Playground','أعمالي — Biuret Playground');
     $('workspace-stats').replaceChildren();
-    for(const [value,text] of [[data.plans.length,tr('Saved plans','خطط محفوظة')],[sum.todayMinutes,tr('Focus minutes today','دقائق التركيز اليوم')],[sum.weekMinutes,tr('Focus minutes · last 7 days','دقائق التركيز · آخر 7 أيام')],[data.favorites.length,tr('Favorite tools','أدوات مفضلة')]]){const n=element('div');n.append(element('strong',new Intl.NumberFormat(locale).format(value)),element('span',text));$('workspace-stats').append(n);}
-    $('saved-plans').replaceChildren();$('plans-empty').hidden=data.plans.length>0;
-    for(const p of [...data.plans].sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt))){const generated=LearningPlanner.restorePlan(p,locale,StudyFlowCatalog),next=model.nextSessions(generated,p.completed);const card=element('article',undefined,'saved-plan');card.append(element('h3',p.name),element('p',`${p.completed.length} / ${generated.sessions.length} · `+tr('sessions checked','جلسة محددة كمنجزة'),'small muted'));const progress=element('progress');progress.max=generated.sessions.length;progress.value=p.completed.length;progress.setAttribute('aria-label',tr('Self-reported progress','التقدم المسجل ذاتياً'));card.append(progress);
-      let task=next.overdue[0]||next.today[0]||next.next;
+    for(const [value,text] of [[data.plans.length,tr('Saved plans','خطط محفوظة')],[sum.todayMinutes,tr('Focus minutes today','دقائق التركيز اليوم')],[sum.weekMinutes,tr('Focus minutes · last 7 days','دقائق التركيز · آخر 7 أيام')],[data.favorites.length,tr('Favorite tools','أدوات مفضلة')]]){const n=element('div');n.append(element('strong',unavailable?'—':number(value)),element('span',text));$('workspace-stats').append(n);}
+    const overviews=data.plans.map(p=>model.planOverview(p,LearningPlanner,StudyFlowCatalog,locale));
+    const selected=model.selectPlans(overviews,{query:$('plan-search').value,status:$('plan-filter').value,sort:$('plan-sort').value,locale});
+    for(const id of ['plan-search','plan-filter','plan-sort'])$(id).disabled=unavailable||!data.plans.length;
+    $('plans-unavailable').hidden=!unavailable;$('plans-empty').hidden=unavailable||data.plans.length>0;
+    $('plans-no-match').hidden=unavailable||!data.plans.length||selected.length>0;
+    feedback($('plan-results-count'),unavailable?'Saved plan count is unavailable.':`${selected.length} of ${data.plans.length} plans`,unavailable?'عدد الخطط المحفوظة غير متاح.':`${number(selected.length)} من ${number(data.plans.length)} خطة`);
+    $('saved-plans').replaceChildren();
+    for(const overview of selected){
+      const {record:p,generated,next,task,remainingMinutes,percent}=overview;
+      const card=element('article',undefined,'saved-plan'),head=element('div',undefined,'saved-plan-head'),title=element('h3',p.name);
+      title.dir='auto';
+      const rename=action('',()=>editPlan(p),'plan-rename');
+      rename.dataset.renamePlan=p.id;rename.setAttribute('aria-label',tr('Rename plan: ','غيّر اسم الخطة: ')+p.name);rename.title=tr('Rename plan','غيّر اسم الخطة');
+      const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 24 24');icon.setAttribute('width','18');icon.setAttribute('height','18');icon.setAttribute('fill','none');icon.setAttribute('stroke','currentColor');icon.setAttribute('stroke-width','1.5');icon.setAttribute('aria-hidden','true');
+      const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M4 17v3h3L20 7l-3-3L4 17zm10-10 3 3M4 20h16');icon.append(path);rename.append(icon);head.append(title,rename);card.append(head);
+      const state=element('span',next.complete?tr('Completed','مكتملة'):p.completed.length?tr('In progress','قيد التعلم'):tr('Ready to start','جاهزة للبدء'),'plan-state');state.dataset.complete=String(next.complete);card.append(state);
+      card.append(element('p',`${number(p.completed.length)} / ${number(generated.sessions.length)} · `+tr('sessions checked','جلسة محددة كمنجزة')+` · ${number(percent)}%`,'small muted'));
+      const progress=element('progress');progress.max=generated.sessions.length;progress.value=p.completed.length;progress.setAttribute('aria-label',tr('Self-reported progress','التقدم المسجل ذاتياً'));card.append(progress);
+      card.append(element('p',tr(`${number(remainingMinutes)} min remaining in the plan`,`${number(remainingMinutes)} دقيقة متبقية في الخطة`),'small planned-effort'));
       const note=next.complete?tr('All sessions checked. Reflect on what you built.','حدّدت جميع الجلسات كمنجزة. راجع ما بنيته.'):next.overdue.length?tr('Continue an earlier unfinished session first.','تابع جلسة سابقة غير مكتملة أولاً.'):next.today.length?tr('Your next step today','خطوتك التالية اليوم'):tr('Your next scheduled session','جلستك التالية المجدولة');card.append(element('strong',note,'next-label'));
-      if(task)card.append(element('p',task.topic),element('p',task.date+tr(` · ${task.minutes} min`,` · ${task.minutes} دقيقة`),'small muted'));
-      const deadline=LearningPlanner.deadline(generated,p.completed);if(deadline.target)card.append(element('p',tr('Target: ','الموعد: ')+deadline.target+' · '+(deadline.complete?tr('All checked','كل الجلسات محددة كمنجزة'):deadline.late?tr('Adjust routine or target','عدّل الروتين أو الموعد'):tr('Routine fits target','الروتين يناسب الموعد')),'small deadline-note'));
+      if(task){const label=element('p',model.sessionLabel(task,locale));label.dir='auto';card.append(label,element('p',date(task.date)+tr(` · ${number(task.minutes)} min`,` · ${number(task.minutes)} دقيقة`),'small muted'));}
+      const deadline=LearningPlanner.deadline(generated,p.completed);if(deadline.target)card.append(element('p',tr('Target: ','الموعد: ')+date(deadline.target)+' · '+(deadline.complete?tr('All checked','كل الجلسات محددة كمنجزة'):deadline.late?tr('Adjust routine or target','عدّل الروتين أو الموعد'):tr('Routine fits target','الروتين يناسب الموعد')),'small deadline-note'));
       const actions=element('div',undefined,'tool-actions');
       actions.append(link(tr('Continue plan ↗','تابع الخطة ↗'),`studyflow.html?plan=${encodeURIComponent(p.id)}#planner`,'primary'));
       if(task){const focus=link(tr('Focus on next session ↗','ركّز على الجلسة التالية ↗'),`focus.html?plan=${encodeURIComponent(p.id)}&session=${task.index}#focus-context`);focus.target='_blank';focus.rel='noopener';actions.append(focus);}
       card.append(actions);$('saved-plans').append(card);
     }
     const names={studyflow:['StudyFlow','منظّم التعلم'],focus:['Focus Room','مساحة التركيز'],json:['JSON Studio','استوديو JSON'],hash:['File Fingerprint','بصمة الملفات'],text:['Text Studio','استوديو النصوص'],compare:['Text Compare','مقارنة النصوص'],url:['URL Inspector','فاحص الروابط']};
-    $('favorite-tools').replaceChildren();$('favorites-empty').hidden=data.favorites.length>0;for(const id of data.favorites)$('favorite-tools').append(link(names[id][locale==='ar'?1:0]+' ↗',id+'.html'));
+    $('favorite-tools').replaceChildren();$('favorites-empty').hidden=unavailable||data.favorites.length>0;for(const id of data.favorites)$('favorite-tools').append(link(names[id][locale==='ar'?1:0]+' ↗',id+'.html'));
     $('backup-export').disabled=!store.read();$('backup-preview').disabled=!store.read();$('backup-file').disabled=!store.read();$('backup-apply').disabled=!candidate||!store.read();$('workspace-clear').disabled=!store.read()&&!store.issue;
+  }
+  if($('plan-search')){
+    $('plan-search').addEventListener('input',dashboard);$('plan-filter').addEventListener('change',dashboard);$('plan-sort').addEventListener('change',dashboard);
+    $('plan-reset').addEventListener('click',()=>{$('plan-search').value='';$('plan-filter').value='all';dashboard();$('plan-search').focus();});
+    $('rename-plan-cancel').addEventListener('click',()=>$('rename-plan-dialog').close());
+    $('rename-plan-dialog').addEventListener('close',()=>{editingPlan=null;});
+    $('rename-plan-form').addEventListener('submit',event=>{
+      event.preventDefault();if(!editingPlan)return;
+      try{
+        const editing=editingPlan,name=$('rename-plan-name').value;
+        store.update(current=>model.renamePlan(current,editing.id,name,editing.name));
+        $('rename-plan-dialog').close();notify();
+        feedback($('plan-action-status'),'Plan name saved. Your schedule and checks are unchanged.','حُفظ اسم الخطة. لم يتغير الجدول أو علامات الإنجاز.','success');
+        const button=[...document.querySelectorAll('[data-rename-plan]')].find(b=>b.dataset.renamePlan===editing.id);
+        (button||$('plan-search')).focus();
+      }catch(error){
+        const notice=error.message==='name-conflict'?['The name changed in another tab. Cancel and reopen Rename to review the latest name.','تغيّر الاسم في تبويب آخر. أغلق النافذة وافتح تعديل الاسم مجدداً لمراجعة آخر اسم.']:error.message==='invalid-name'?['Enter a name with 1–80 characters.','أدخل اسماً من 1 إلى 80 محرفاً.']:['Could not rename this plan. Your saved work has not been replaced.','تعذّر تعديل الاسم. لم نستبدل أعمالك المحفوظة.'];
+        feedback($('rename-plan-status'),...notice,'error');
+      }
+    });
   }
   if($('backup-export')){
     $('backup-export').addEventListener('click',()=>{const data=store.read();if(!data)return;PlaygroundUI.saveFile(JSON.stringify(data,null,2),'biuret-playground-backup.json','application/json');feedback($('backup-status'),'Backup downloaded. Keep it private; it includes plan names and focus task labels.','نُزّلت النسخة. احتفظ بها بخصوصية؛ تتضمن أسماء الخطط وعناوين مهام التركيز.');});

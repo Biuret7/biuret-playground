@@ -99,6 +99,10 @@ html[data-theme=light] .inspection-status[data-tone=success]:not(:empty) { color
 html[data-theme=light] .diff-number { color:#48606a; }
 html[data-theme=light] .focus-context.tool-panel { background:#e1ecd8; border-color:#7d985f; }
 html[data-theme=light] .focus-context-heading svg { color:#3d642b; }
+html[data-theme=light] .plan-rename { color:#345b39; border-color:#91a78d; background:#eff4eb; }
+html[data-theme=light] .plan-rename:hover { background:#d5e4c8; border-color:#648550; }
+html[data-theme=light] .plan-state { background:#dce7d2; border-color:#a0b68e; color:#36562e; }
+html[data-theme=light] .plan-state[data-complete=true] { background:#cde5d4; border-color:#88ad93; color:#285c39; }
 @media(hover:hover) and (pointer:fine) {
   html[data-theme=light] .top nav>:is(a,button):hover { background:#2e5157; color:#fff; border-color:#779e8a; transform:translateY(-2px); box-shadow:0 5px 14px #102b3420; }
   html[data-theme=light] .intent-grid button:hover { background:#3a5c65; color:#fff; border-color:#a3c294; }

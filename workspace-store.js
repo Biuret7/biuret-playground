@@ -53,11 +53,42 @@
     const sessionIndex=Number(index),plan=planner.restorePlan(record,locale,catalog),session=plan.sessions[sessionIndex];
     if(!session)throw Error('invalid-session');
     if(record.completed.includes(sessionIndex))throw Error('completed-session');
+    const task=sessionLabel(session,locale);
+    return {planId:record.id,planName:record.name,index:sessionIndex,session,task:task.slice(0,160),minutes:session.minutes};
+  }
+  function sessionLabel(session,locale='en'){
     const labels={learn:['Learn','تعلّم'],practice:['Practice','تطبيق'],review:['Review','مراجعة'],project:['Final project','المشروع النهائي']};
     const label=labels[session.kind][locale==='ar'?1:0];
     const part=session.parts>1?(locale==='ar'?` · الجزء ${session.part}/${session.parts}`:` · part ${session.part}/${session.parts}`):'';
-    const task=label+': '+session.topic+part;
-    return {planId:record.id,planName:record.name,index:sessionIndex,session,task:task.slice(0,160),minutes:session.minutes};
+    return label+': '+session.topic+part;
+  }
+  function planOverview(record,planner,catalog,locale='en',today=localDay()){
+    const generated=planner.restorePlan(record,locale,catalog),next=nextSessions(generated,record.completed,today);
+    const task=next.overdue[0]||next.today[0]||next.next;
+    const remainingMinutes=generated.sessions.reduce((sum,s,index)=>sum+(record.completed.includes(index)?0:s.minutes),0);
+    const template=catalog.find(item=>item.id===record.config.template);
+    const searchText=template?[record.config.template,...Object.values(template.project),...template.units.flatMap(unit=>Object.values(unit.title))].join(' '):'';
+    return {record,generated,next,task,searchText,remainingMinutes,percent:Math.round(record.completed.length/generated.sessions.length*100)};
+  }
+  function selectPlans(overviews,{query='',status='all',sort='updated',locale='en'}={}){
+    const normalize=text=>String(text).normalize('NFKD').replace(/\p{M}/gu,'').replace(/[أإآٱ]/g,'ا').toLowerCase();
+    const words=normalize(query.trim()).split(/\s+/).filter(Boolean);
+    return overviews.filter(item=>{
+      if(status==='active'&&item.next.complete||status==='completed'&&!item.next.complete)return false;
+      const terms=normalize(item.record.name+' '+item.searchText+' '+item.generated.project+' '+item.generated.sessions.map(s=>s.topic).join(' '));
+      return words.every(word=>terms.includes(word));
+    }).sort((a,b)=>{
+      if(sort==='name')return a.record.name.localeCompare(b.record.name,locale);
+      if(sort==='next'){const next=(a.task?.date||'9999').localeCompare(b.task?.date||'9999');if(next)return next;}
+      return b.record.updatedAt.localeCompare(a.record.updatedAt)||a.record.id.localeCompare(b.record.id);
+    });
+  }
+  function renamePlan(current,planId,name,expectedName,now=new Date()){
+    if(!id(planId)||!str(name,80)||!name.trim())throw Error('invalid-name');
+    const record=current.plans.find(p=>p.id===planId);
+    if(!record)throw Error('missing-plan');
+    if(record.name!==expectedName)throw Error('name-conflict');
+    return {...current,plans:current.plans.map(p=>p.id===planId?{...p,name:name.trim(),updatedAt:now.toISOString()}:p)};
   }
   function summary(sessions,now=new Date()){
     const start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-6);const day=localDay(now);
@@ -65,5 +96,5 @@
     return {today:today.length,todayMinutes:today.reduce((n,s)=>n+s.minutes,0),week:week.length,weekMinutes:week.reduce((n,s)=>n+s.minutes,0)};
   }
   function makePlan(config,name,generated,existing){const stamp=new Date().toISOString(),record={id:existing?.id||crypto.randomUUID(),name:name.trim(),engine:config.custom||config.deadline||existing?.schedule?2:1,signature:existing?.signature||generated.sessions.map(s=>[s.kind,s.date,s.minutes,s.part,s.parts].join(':')).join('|'),config,completed:existing?.completed||[],createdAt:existing?.createdAt||stamp,updatedAt:stamp};if(existing?.schedule)record.schedule=existing.schedule;return record;}
-  return {KEY,FORMAT,VERSION,tools,empty,validate,parse,merge,connect,localDay,nextSessions,focusSession,summary,makePlan};
+  return {KEY,FORMAT,VERSION,tools,empty,validate,parse,merge,connect,localDay,nextSessions,focusSession,sessionLabel,planOverview,selectPlans,renamePlan,summary,makePlan};
 });
