@@ -22,15 +22,7 @@
     if(store.issue){actions.replaceChildren(link(tr('Recovery options','خيارات الاستعادة'),'workspace.html#backup'));feedback(message,'Saved data is unreadable or browser storage is blocked. Nothing was overwritten.','البيانات المحفوظة غير قابلة للقراءة أو التخزين محظور. لم نستبدل أي بيانات.');}
   }
   function favorites(){
-    const saved=store.read();document.querySelectorAll('[data-favorite]').forEach(b=>{
-      const on=saved?.favorites.includes(b.dataset.favorite)||false;b.setAttribute('aria-pressed',String(on));b.disabled=!saved;
-      if(b.dataset.compactFavorite==='true'){
-        const name=b.closest('article').querySelector('h3').textContent;
-        const label=!saved?tr('Enable device saving to favorite: ','فعّل الحفظ لإضافة الأداة للمفضلة: ')+name:(on?tr('Remove from favorites: ','أزل من المفضلة: '):tr('Save to favorites: ','أضف للمفضلة: '))+name;
-        b.setAttribute('aria-label',label);b.title=label;
-        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS('http://www.w3.org/2000/svg','path');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill',on?'currentColor':'none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.5');svg.setAttribute('aria-hidden','true');path.setAttribute('d','m12 3 2.8 5.7 6.3.9-4.55 4.44 1.08 6.26L12 17.35l-5.63 2.95 1.08-6.26L2.9 9.6l6.3-.9L12 3z');svg.append(path);b.replaceChildren(svg);
-      }else{b.textContent=on?tr('★ Saved tool','★ أداة مفضلة'):tr('☆ Save tool','☆ أضف للمفضلة');b.title=saved?'':tr('Enable device saving first','فعّل الحفظ على الجهاز أولاً');}
-    });
+    const saved=store.read();document.querySelectorAll('[data-favorite]').forEach(b=>{const on=saved?.favorites.includes(b.dataset.favorite)||false;b.setAttribute('aria-pressed',String(on));b.textContent=on?tr('★ Saved tool','★ أداة مفضلة'):tr('☆ Save tool','☆ أضف للمفضلة');b.disabled=!saved;b.title=saved?'':tr('Enable device saving first','فعّل الحفظ على الجهاز أولاً');});
   }
   document.querySelectorAll('[data-favorite]').forEach(b=>b.addEventListener('click',()=>{try{store.update(s=>({...s,favorites:s.favorites.includes(b.dataset.favorite)?s.favorites.filter(x=>x!==b.dataset.favorite):[...s.favorites,b.dataset.favorite]}));favorites();notify();}catch{error();}}));
   let candidate=null,importRevision=0,renderBackup=()=>{};

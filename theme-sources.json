@@ -5,7 +5,6 @@
     "workspace.css",
     "showcase.css",
     "guide/widget.css",
-    "polish.css",
-    "studio-ui.css"
+    "polish.css"
   ]
 }
